@@ -1,13 +1,31 @@
-import { CiMail } from "react-icons/ci";
+import { useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
-import { MdOutlineTask } from "react-icons/md";
 import Modal from 'react-modal';
+import { BsFillLightningChargeFill, BsPersonPlusFill } from "react-icons/bs";
 Modal.setAppElement('#root');
 
-const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource  }) => {
+const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource }) => {
+
+    const [leadVal, setLeadVal] = useState("Test List 1");
+    const [srcOptSelected, setSrcOptSelected] = useState(false);
+    const srcLeadList = ["Test list","Test 2","Sample List"];
+    
+
+
+    const handleCardClick = (type)=>{
+        switch(type){
+            case 'lead-list':
+                setSrcOptSelected(true);
+                break;
+            default:
+                return;
+        }
+    }
+
+
     return (
         <>
-            <Modal 
+            <Modal
                 isOpen={leadModalOpen}
                 onRequestClose={closeLeadModal}
                 style={{
@@ -18,8 +36,8 @@ const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource  }) =
                         bottom: 'auto',
                         transform: 'translate(-50%, -50%)',
                         height: '400px', // Set your desired height here
-                        width: '500px', // Optional: Set width as well
-                        background: '#ececec'
+                        width: '600px', // Optional: Set width as well
+                        background: '#F1F1F1'
                     }
                 }}>
                 <div className="h-full w-full">
@@ -31,14 +49,59 @@ const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource  }) =
                             className='text-red-500'
                             onClick={closeLeadModal} />
                     </div>
-                    <h1 className='m-1 p-1 text-base font-semibold text-gray-800'>Select lead source available</h1>
-                    <div className='flex justify-evenly items-center flex-wrap gap-2 '>
-                       <button 
-                       className="w-24 p-2 m-2 border border-black"
-                       onClick={()=> updateLeadSource({label: new Date().toDateString()})}>
-                        <p className="text-sm">Click</p>
-                       </button>
-                    </div>
+                    <h1 className='m-1 p-1 text-base font-semibold text-gray-800'>Sources</h1>
+                    {
+                        srcOptSelected ?
+                            <>
+                                <div className='flex flex-col justify-evenly items-center flex-wrap gap-2 '>
+                                    <select 
+                                    className="w-full bg-white m-1 p-2 rounded-md"
+                                    name="lead-select" 
+                                    id="lead-select"
+                                    onChange={(e)=> setLeadVal(e.target.value)}>
+                                       {
+                                        srcLeadList?.map((item,index)=>( 
+                                        <option 
+                                        className=""
+                                        key={index}
+                                        value={item}>{item}</option>
+                                    ))}
+                                    </select>
+                                    <button
+                                        className="h-fit w-24 px-2 py-3 m-2 bg-blue-400 text-white rounded-md"
+                                        onClick={() => updateLeadSource({ label: new Date().toDateString(), title: leadVal })}>
+                                        <p className="text-sm">Click</p>
+                                    </button>
+                                </div>
+                            </>
+                            :
+                            <>
+                                {/* source cards */}
+                                <div className="w-full h-2/3 py-1 flex justify-evenly items-start flex-wrap gap-1">
+
+                                    <div className="w-[260px] h-[90px] py-2 px-2 bg-white rounded-md flex justify-center items-center gap-2 cursor-pointer"
+                                    onClick={()=> handleCardClick("lead-list")}>
+                                        <div className="w-1/3 h-16 bg-pink-200 p-1 grid place-items-center rounded-md">
+                                            <BsPersonPlusFill className=" text-pink-500 text-xl font-semibold" />
+                                        </div>
+                                        <div className="w-2/3">
+                                            <p className="text-sm text-black font-semibold">Lead(s) from list</p>
+                                            <p className="text-sm text-gray-500">Select list as source for the sequence</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="w-[260px] h-[90px]  py-2 px-2 bg-white rounded-md flex justify-center items-center gap-2 cursor-pointer">
+                                        <div className="w-1/3 h-16 bg-lime-200 p-1 grid place-items-center  rounded-md">
+                                            <BsFillLightningChargeFill className=" text-lime-500 text-xl font-semibold" />
+                                        </div>
+                                        <div className="w-2/3">
+                                            <p className="text-sm text-black font-semibold">Lead from CRM</p>
+                                            <p className="text-sm text-gray-500">Use leads from your CRM</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                    }
                 </div>
             </Modal>
 
