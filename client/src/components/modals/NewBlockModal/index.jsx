@@ -36,7 +36,7 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                         {/* cold email */}
                         <div 
                         className="h-20 w-[200px] px-4 py-2 flex justify-evenly items-center gap-2 bg-white cursor-pointer"
-                        onClick={()=>addNewNode('email')}>
+                        onClick={()=>addNewNode('email',{label: new Date().toDateString() })}>
                             <div className="h-full w-[50%] rounded-md bg-purple-200 grid justify-center items-center">
                                 <CiMail className='text-[42px] text-purple-500' />
                             </div>
@@ -48,7 +48,7 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                         {/* delay  */}
                         <div 
                         className="h-20 w-[200px] px-4 py-2 flex justify-evenly items-center gap-2 bg-white cursor-pointer"
-                        onClick={()=>addNewNode('email')}>
+                        onClick={()=>addNewNode('email',{label: new Date().toDateString() })}>
                             <div className="h-full w-[50%] rounded-md bg-purple-200 grid justify-center items-center">
                                 <MdOutlineTask className='text-[42px] text-purple-500' />
                             </div>

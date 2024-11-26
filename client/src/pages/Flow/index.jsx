@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     ReactFlow,
     MiniMap,
@@ -8,15 +8,14 @@ import {
     useEdgesState,
     addEdge,
 } from '@xyflow/react';
-import Modal from 'react-modal';
 import '@xyflow/react/dist/style.css';
-import { nanoid } from 'nanoid';
-import { AddBlock, ColdEmail, NewBlockModal } from '../../components';
+import { AddBlock, ColdEmail, LeadSource, LeadSourceModal, NewBlockModal } from '../../components';
+import { createEdge, createNode } from '../../utils';
 
 
 const initialNodes = [
-    { id: 'lead-src', position: { x: 0, y: 0 }, data: { label: 'Add Lead Source' }, draggable: false },
-    { id: 'add-block', position: { x: 59, y: 60 }, data: {}, type: 'addBlock', draggable: false },
+    { id: 'lead-src', position: { x: 0, y: 0 }, data: { label: 'Add Lead Source', title: 'Lead src'  }, type: 'lead', draggable: false },
+    { id: 'add-block', position: { x: 59, y: 80 }, data: {}, type: 'addBlock', draggable: false },
 ];
 const initialEdges = [{ id: 'e-addblock', source: 'lead-src', target: 'add-block', drag: false }];
 
@@ -24,82 +23,80 @@ const Flow = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     // comp states
-    const [leadSourceModal, setLeadSourceModal] = useState(false);
+    const [leadModalOpen, setLeadModalOpen] = useState(false);
     const [blockModalOpen, setBlockModalOpen] = useState(false);
+    const [leadSrcData, setLeadSrcData] = useState({});
 
     const nodeTypes = useMemo(() => ({
         addBlock: AddBlock,
-        email: ColdEmail
+        email: ColdEmail,
+        lead: LeadSource,
     }), []);
 
+
+    // modal togglers
     const openBlockModal = () => setBlockModalOpen(true);
     const closeBlockModal = () => setBlockModalOpen(false);
+    const openLeadModal = () => setLeadModalOpen(true);
+    const closeLeadModal = () => setLeadModalOpen(false);
 
 
-    const createNode = (nodeType,posX,posY,data)=>{
-        return {
-            id: nanoid(),
-            position: {x:posX, y:posY},
-            data: data,
-            type: nodeType
-        }
+
+    // update lead source
+    const updateLeadSource = (newData)=>{
+        setLeadSrcData(newData);
+        const updatedNodesArr = nodes.map((nd)=> nd.id==='lead-src' ? {...nd,...newData} : nd);
+        setNodes(updatedNodesArr);
+        closeLeadModal();
     }
 
-    const createEdge = (source, target) => {
-        return {
-            id: nanoid(),
-            source: source,
-            target: target
-        }
-    }
-
-    const addNewNode = (nodeType) => {
+    const addNewNode = (nodeType,data) => {
 
         if (blockModalOpen) closeBlockModal();
 
-        const newNode = createNode(nodeType,59,nodes[nodes.length-1].position.y+40,{});
+        const newNode = createNode(nodeType,0,nodes[nodes.length-1].position.y+40,data);
 
-        // First, update the nodes
+        // --- removing the add block
         setNodes((prevNodes) => {
             // remove add block
-            // prevNodes.pop();
             return prevNodes.filter(node => node.id !== 'add-block').concat(newNode);
         });
-
+        // --- creating new edges 
         setEdges((prevEdges) => {
             let newEdges = [...prevEdges];
 
             const nodeCount = nodes.length;
-            console.log("Node count",nodeCount);
 
-            if (nodeCount === 2) { // Third node case
+            if (nodeCount === 2) { // when first new node created
                 const edge1 = createEdge('lead-src', newNode.id);
                 const edge2 = createEdge(newNode.id, 'add-block');
                 newEdges = [edge1, edge2];
-            } else if (nodeCount > 2) { // For subsequent nodes after the third
+            } else if (nodeCount > 2) { // for rest of the nodes
                 const lastNode = nodes[nodeCount - 2];
                 const edge1 = createEdge(lastNode.id, newNode.id);
                 const edge2 = createEdge(newNode.id, 'add-block');
-                newEdges.pop(); // Remove the last edge to keep it clean
+                newEdges.pop(); // last edge is connected w add-block
                 newEdges.push(edge1, edge2);
             }
             return newEdges;
         });
-
-        setNodes((prevNodes)=> [...prevNodes, { id: 'add-block', position: { x: 59, y: prevNodes[prevNodes.length-1].position.y+60 }, data: {}, type: 'addBlock' }])
+        // --- add add block again
+        setNodes((prevNodes)=> [...prevNodes, { id: 'add-block', position: { x: 60, y: prevNodes[prevNodes.length-1].position.y+80 }, data: {}, type: 'addBlock' }])
     };
-
-    const toggleBlockModal = () => {
-        if (!blockModalOpen) openBlockModal();
-        else closeBlockModal();
-    }
 
     // any node click
     const onNodeClick = (event, node) => {
-        if (node.type === "addBlock") {
-            if (node.id === "add-block") toggleBlockModal();
+        switch (node.type) {
+            case 'addBlock':
+                if(node.id==="add-block") openBlockModal();
+                break;
+            case 'lead':
+                openLeadModal();
+                break;
+            default:
+                alert("node id",node?.id);
+                break;
         }
-        else alert("Node id", node.id);
     }
 
     // while connecting nodes
@@ -108,14 +105,34 @@ const Flow = () => {
         [setEdges],
     );
 
+    // for updating lead-src node 
+    useEffect(() => {
+        setNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === 'lead-src') {
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  ...leadSrcData
+                }
+              };
+            }
+            return node;
+          }),
+        );
+      }, [leadSrcData, setNodes]);
+
     return (
         <div style={{ width: '100vw', height: '100vh' }}>
 
             {
-                leadSourceModal && (
-                    <Modal className="absolute top-0 left-0 ">
-                        Add Lead Source
-                    </Modal>
+                leadModalOpen && (
+                    <LeadSourceModal
+                    leadModalOpen={leadModalOpen}
+                    closeLeadModal={closeLeadModal}
+                    updateLeadSource={updateLeadSource}
+                    />
                 )
             }
             {
@@ -127,7 +144,6 @@ const Flow = () => {
                 )
             }
             <ReactFlow
-                // attaching onClick handler for each node
                 nodes={nodes}
                 edges={edges}
                 onNodesChange={onNodesChange}
