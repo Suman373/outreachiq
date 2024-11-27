@@ -1,6 +1,6 @@
 
 const {UserModel} = require('../database/models/index');
-const {GenerateJWT, GenerateSalt, HashPassword} = require('../utils/index');
+const {GenerateJWT, GenerateSalt, HashPassword, ValidatePassword} = require('../utils/index');
 
 const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
@@ -39,6 +39,40 @@ const registerUser = async (req, res) => {
     }
 }
 
+const loginUser = async(req,res)=>{
+    const { email, password } = req.body; 
+    if ( !email || !password) {
+        return res.status(400).json({ message: 'Email and password are required.' });
+    }
+
+    try {
+        const existingUser = await UserModel.findOne({email:email});
+
+        if(!existingUser) {
+            return res.status(404).json({message: 'User with email does not exist'});
+        }
+
+        const validPass = await ValidatePassword(password, existingUser.password);
+
+        if(!validPass) {
+            return res.status(401).json({message: 'Invalid password'});
+        }
+
+        const token = await GenerateJWT({_id: existingUser._id});
+        return res.status(200).json({
+            message: 'User login successful',
+            user: existingUser,
+            token: token
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'Internal server error'});
+    }
+
+}
+
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser
 }

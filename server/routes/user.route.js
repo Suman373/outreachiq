@@ -1,11 +1,12 @@
 const express = require('express');
-const { registerUser } = require('../controllers/user.controller');
+const { registerUser, loginUser } = require('../controllers/user.controller');
 const router = express.Router();
 
 
 router.get('/');
 router.get('/:id');
-router.post('/', registerUser);
+router.post('/register', registerUser);
+router.post('/login', loginUser);
 router.put('/:id');
 router.delete('/:id');
 
