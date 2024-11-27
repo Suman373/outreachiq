@@ -11,8 +11,8 @@ module.exports.HashPassword = async(password,salt)=>{
     return await bcrypt.hash(password,salt);
 }
 
-module.exports.ValidatePassword = async (password, hashedPassword,salt)=>{
-    return (await this.HashPassword(password, salt)=== hashedPassword);
+module.exports.ValidatePassword = async (password, hashedPassword)=>{
+    return await bcrypt.compare(password, hashedPassword);
 }
 
 

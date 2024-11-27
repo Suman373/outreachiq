@@ -1,6 +1,6 @@
 {
   "name": "email-seq-server",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "backend server for email sequence flow app",
   "main": "index.js",
   "scripts": {
