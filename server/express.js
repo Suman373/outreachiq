@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { UserRoute } = require('./routes/index');
 
 module.exports = async(app)=>{
     app.use(express.json());
@@ -7,4 +8,5 @@ module.exports = async(app)=>{
     app.use(cors({origin:"*"}));
 
     // api routes
+    app.use('/users',UserRoute);
 }

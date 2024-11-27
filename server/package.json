@@ -1,6 +1,6 @@
 {
   "name": "email-seq-server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "backend server for email sequence flow app",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.3"
   },
   "devDependencies": {
