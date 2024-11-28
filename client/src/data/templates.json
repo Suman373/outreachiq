@@ -1,0 +1,9 @@
+{
+    "emailTemplates":[
+        {
+            "title":"Default",
+            "subject":"",
+            "body":"Thank you for choosing our product! We hope it meets your needs and exceeds your expectations. Please don't hesitate to reach out if you have any questions or need assistance. We're here to help!"
+        }
+    ]
+}

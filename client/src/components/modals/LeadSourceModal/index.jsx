@@ -70,7 +70,7 @@ const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource }) =>
                                     <button
                                         className="h-fit w-24 px-2 py-3 m-2 bg-blue-400 text-white rounded-md"
                                         onClick={() => updateLeadSource({ label: new Date().toDateString(), title: leadVal })}>
-                                        <p className="text-sm">Click</p>
+                                        <p className="text-sm">Save</p>
                                     </button>
                                 </div>
                             </>
