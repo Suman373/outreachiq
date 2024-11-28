@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { UserRoute } = require('./routes/index');
+const { UserRoute, FlowRoute, NodeRoute, EdgeRoute } = require('./routes/index');
 
 module.exports = async(app)=>{
     app.use(express.json());
@@ -9,4 +9,7 @@ module.exports = async(app)=>{
 
     // api routes
     app.use('/users',UserRoute);
+    app.use('/flows', FlowRoute);
+    app.use('/nodes', NodeRoute);
+    app.use('/edges', EdgeRoute);
 }
