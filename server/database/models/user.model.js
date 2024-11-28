@@ -4,7 +4,7 @@ const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
       password: { type: String, required: true },
-      flows: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Flow' }],
+      flows: [{ type: mongoose.Schema.Types.ObjectId, ref: 'flow' }],
 },{
     toJSON:{
         transform(doc,ret){

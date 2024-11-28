@@ -13,7 +13,7 @@ const NodeSchema = new mongoose.Schema({
     body:{type:String},
     recipients: [{type:String}],
     delay:{type:Number},
-    nextNode:{type:mongoose.SchemaTypes.ObjectId, ref:'Node'},
+    nextNode:{type:mongoose.SchemaTypes.ObjectId, ref:'node'},
 },{timestamps:true});
 
 module.exports = mongoose.model('node', NodeSchema);
