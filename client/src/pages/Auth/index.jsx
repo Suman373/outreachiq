@@ -38,7 +38,7 @@ const Auth = ({setIsLoggedIn}) => {
     const handleSignUpSubmit = async(e) => {
         e.preventDefault();
         try {
-            const data = await axios.post(`${import.meta.VITE_API_ENDPOINT}/users/register`,{
+            const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/users/register`,{
                 name: signupData.username, email: signupData.email, password: signupData.password
             });
             console.log(data);
@@ -57,7 +57,7 @@ const Auth = ({setIsLoggedIn}) => {
     const handleSignInSubmit = async(e) => {
         e.preventDefault();
         try {
-            const data = await axios.post(`${import.meta.VITE_API_ENDPOINT}/users/login`,{
+            const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/users/login`,{
                 email: siginData.email, password: siginData.password
             });
             if(data?.status !== 200) throw new Error;
