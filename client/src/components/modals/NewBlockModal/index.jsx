@@ -44,6 +44,10 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                 closeBlockModal();
                 break;
             case 'wait':
+                if(waitVal === "") {
+                    alert("Select a wait value");
+                    return;
+                }
                 const waitObj={
                     label: `${waitVal} ${waitType}`,
                     delay: convertToSeconds(waitVal,waitType),

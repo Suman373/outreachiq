@@ -1,2 +1,2 @@
-export {default as Flow} from './Flow/index';
-export {default as Signup} from './Signup/index';
+export {default as Home} from './Home/index';
+export {default as Auth} from './Auth/index';
