@@ -11,6 +11,11 @@
 
 **Server:** Node, Express, MongoDB, Nodemailer, Agenda
 
+## Deployed links
+
+Client : https://email-seq-task.vercel.app/
+
+Server : https://email-seq-server.onrender.com/ 
 
 ## Run Locally
 
@@ -46,6 +51,10 @@ Start the client at port 3000
 ```
 
 Start the server at port 8000
+
+```bash
+  npm run dev
+```
 
 Create a .env file 
 
