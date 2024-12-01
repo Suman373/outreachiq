@@ -52,6 +52,41 @@ const Flow = () => {
         closeLeadModal();
     }
 
+    // addition of block
+    const addNewNode = (nodeType,data) => {
+
+        if (blockModalOpen) closeBlockModal();
+
+        const newNode = createNode(nodeType,0,nodes[nodes.length-1].position.y+40,data);
+
+        // --- removing the add block
+        setNodes((prevNodes) => {
+            // remove add block
+            return prevNodes.filter(node => node.id !== 'add-block').concat(newNode);
+        });
+        // --- creating new edges 
+        setEdges((prevEdges) => {
+            let newEdges = [...prevEdges];
+
+            const nodeCount = nodes.length;
+
+            if (nodeCount === 2) { // when first new node created
+                const edge1 = createEdge('lead-src', newNode.id);
+                const edge2 = createEdge(newNode.id, 'add-block');
+                newEdges = [edge1, edge2];
+            } else if (nodeCount > 2) { // for rest of the nodes
+                const lastNode = nodes[nodeCount - 2];
+                const edge1 = createEdge(lastNode.id, newNode.id);
+                const edge2 = createEdge(newNode.id, 'add-block');
+                newEdges.pop(); // last edge is connected w add-block
+                newEdges.push(edge1, edge2);
+            }
+            return newEdges;
+        });
+        // --- add add block again
+        setNodes((prevNodes)=> [...prevNodes, { id: 'add-block', position: { x: 60, y: prevNodes[prevNodes.length-1].position.y+80 }, data: {}, type: 'addBlock' }])
+    };
+
 
 
     // any node click
