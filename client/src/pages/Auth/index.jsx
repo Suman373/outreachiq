@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const Auth = ({setIsLoggedIn}) => {
+const Auth = ({ setIsLoggedIn }) => {
 
     const navigate = useNavigate();
     const [showLogin, setShowLogin] = useState(false);
@@ -35,17 +35,17 @@ const Auth = ({setIsLoggedIn}) => {
         });
     };
 
-    const handleSignUpSubmit = async(e) => {
+    const handleSignUpSubmit = async (e) => {
         e.preventDefault();
         try {
-            const data = await axios.post(`${import.meta.VITE_API_ENDPOINT}/users/register`,{
+            const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/users/register`, {
                 name: signupData.username, email: signupData.email, password: signupData.password
             });
             console.log(data);
-            if(data?.status !== 201) throw new Error;
+            if (data?.status !== 201) throw new Error;
             alert('Registration successful');
             localStorage.setItem('email-seq-user', JSON.stringify(signupData));
-            setSignupData({username:'',email:'',password:''});
+            setSignupData({ username: '', email: '', password: '' });
             setIsLoggedIn(true);
             navigate('/');
         } catch (error) {
@@ -54,15 +54,15 @@ const Auth = ({setIsLoggedIn}) => {
         }
     };
 
-    const handleSignInSubmit = async(e) => {
+    const handleSignInSubmit = async (e) => {
         e.preventDefault();
         try {
-            const data = await axios.post(`${import.meta.VITE_API_ENDPOINT}/users/login`,{
+            const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/users/login`, {
                 email: siginData.email, password: siginData.password
             });
-            if(data?.status !== 200) throw new Error;
+            if (data?.status !== 200) throw new Error;
             localStorage.setItem('email-seq-user', JSON.stringify(siginData));
-            setSiginData({username:'',email:'',password:''});
+            setSiginData({ username: '', email: '', password: '' });
             setIsLoggedIn(true);
             navigate('/');
         } catch (error) {

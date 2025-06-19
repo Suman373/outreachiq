@@ -129,7 +129,7 @@ const Flow = () => {
       }, [leadSrcData, setNodes]);
 
     return (
-        <div style={{ width: '100vw', height: '90vh' }}>
+        <div style={{ width: '80%', height: '90vh', overflowX: 'scroll' }}>
             <button className='px-4 py-2 rounded-md flex justify-center items-center gap-1 bg-green-400 text-green-800'>
                 <FaPlay />
                <p>Schedule</p>

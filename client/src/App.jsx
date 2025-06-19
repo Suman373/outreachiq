@@ -4,7 +4,7 @@ import { BrowserRouter as BRouter, Routes, Route, Navigate } from 'react-router-
 
 const App = () => {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   useEffect(() => {
     const user = localStorage.getItem('email-seq-user');
