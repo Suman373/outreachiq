@@ -6,8 +6,8 @@ const NodeSchema = new mongoose.Schema({
     type:{type:String},
     label:{type:String},
     position:{
-        X:{type:Number},
-        Y:{type:Number}
+        x:{type:Number},
+        y:{type:Number}
     },
     subject:{type:String},
     body:{type:String},

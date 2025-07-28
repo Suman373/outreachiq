@@ -22,5 +22,10 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-
+.input-field{
+ @apply w-full bg-white p-2 rounded-md;
+}
+.input-label{
+   @apply w-full text-sm text-gray-600;
+}
 

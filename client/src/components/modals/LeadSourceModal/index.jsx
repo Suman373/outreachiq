@@ -5,7 +5,7 @@ import { BsFillLightningChargeFill, BsPersonPlusFill } from "react-icons/bs";
 import { useLeadContext } from "../../../contexts/LeadContext.jsx";
 Modal.setAppElement('#root');
 import Papa, { parse } from 'papaparse';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 
 const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource }) => {
 
@@ -75,7 +75,7 @@ const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource }) =>
             return;
         }
         if (trimmedTitle.toLowerCase() === "sample leads" || activeId === "sample-leads") {
-            setError("You cannot use 'Sample Leads' as the title. Please choose another.");
+            setError("Sample Leads cannot be saved. Please upload your own lead file.");
             return;
         }
         if (activeId) {
@@ -84,7 +84,7 @@ const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource }) =>
         } else {
             // new lead
             const newLead = {
-                id: uuidv4(),
+                id: nanoid(),
                 title: trimmedTitle,
                 leads: parsedLeads
             };
