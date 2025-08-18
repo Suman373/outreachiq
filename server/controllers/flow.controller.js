@@ -1,20 +1,14 @@
-const {EMAIL_SERVICE, SCHEDULE_SERVICE} = require('../services/');
+const { processFlow } = require('../services/flow.service');
 
-// a [POST] API where time, email body, subject and an email address can be requested.
 const scheduleFlow = async(req,res)=>{
-    
-    const {time,body,subject,address} = req.body;
-    if(!time || !body || !subject || !address){
-        return res.status(400).json({message: "Missing required fields"});
-    }
     try {
-        await SCHEDULE_SERVICE.scheduleEmail(
-            time,
-            subject,
-            body,
-            address
-        );
-        res.status(200).json({message:'Email scheduled successfully'});
+        const {flowData, leads} = await req.body;
+        if(!leads || leads.length === 0) {
+            res.status(404).json({message:"Leads not found"});
+        }
+        console.log(flowData,leads);
+        // const flowServiceRes = await processFlow();
+        return res.status(200).json({message:"Flow scheduled successfully"});
     } catch (error) {
         console.log(error);
         res.status(500).json({message: 'Internal server error'});

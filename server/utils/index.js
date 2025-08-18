@@ -2,6 +2,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {APP_SECRET} = require('../config/index');
 
+const timeUnitsInSeconds = {
+    "Minutes": 60,        // 1 minute = 60 seconds
+    "Hours": 3600,        // 1 hour = 3600 seconds
+    "Days": 86400,        // 1 day = 86400 seconds
+    "Weeks": 604800       // 1 week = 604800 seconds
+};
+
 module.exports.GenerateSalt = async()=>{
     return await bcrypt.genSalt(10);
 }
@@ -39,4 +46,8 @@ module.exports.ValidateJWT = async(req)=>{
         console.log(error);
         return false;
     }
+}
+
+module.exports.ConvertToSeconds = (val,unit)=>{
+    return val * timeUnitsInSeconds[unit]
 }
