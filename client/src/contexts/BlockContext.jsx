@@ -6,21 +6,38 @@ const BlockContext = createContext();
 
 export const BlockProvider = ({ children }) => {
 
-    const emailTemplates = templates?.emailTemplates;
+    const emailTemplates = templates?.emailTemplates || [];
     const [blockOptSelected, setBlockOptSelected] = useState(false);
     const [nodeType, setNodeType] = useState("");
     const [emailBlock, setEmailBlock] = useState({
         title: emailTemplates[0].title,
         subject: emailTemplates[0].subject,
         body: emailTemplates[0].body,
-        type: "template",
+        emailType: "template",
         variables: emailTemplates[0].variables,
         aiGenerated: false,
     });
     const [waitBlock, setWaitBlock] = useState({
-        value: "",
+        delay: "",
         format: "Minutes"
     });
+
+    const resetBlock=()=>{
+        setEmailBlock({
+            title: emailTemplates[0].title,
+            subject: emailTemplates[0].subject,
+            body: emailTemplates[0].body,
+            emailType: "template",
+            variables: emailTemplates[0].variables,
+            aiGenerated: false,
+        });
+        setWaitBlock({
+            delay: "",
+            format: "Minutes"
+        });
+        setNodeType("");
+        setBlockOptSelected(false);
+    }
 
     const handleBlockClick = (nodeType) => {
         setNodeType(nodeType);
@@ -38,7 +55,8 @@ export const BlockProvider = ({ children }) => {
             setEmailBlock,
             waitBlock,
             setWaitBlock,
-            handleBlockClick
+            handleBlockClick,
+            resetBlock,
         }}>
             {children}
         </BlockContext.Provider>

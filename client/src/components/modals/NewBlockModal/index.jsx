@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import { BsClock } from "react-icons/bs";
 import { CiMail } from "react-icons/ci";
 import { MdAutoAwesome } from 'react-icons/md';
-import { Fa500Px, FaWindowClose } from "react-icons/fa";
+import { FaWindowClose } from "react-icons/fa";
 import Modal from 'react-modal';
-import templates from '../../../data/templates.json';
 import constants from "../../../constants";
-import { convertToSeconds, extractVariablesMap } from "../../../utils";
+import {  extractVariablesMap } from "../../../utils";
 import toast from "react-hot-toast";
 import { useBlockContext } from "../../../contexts/BlockContext";
 import { nanoid } from "nanoid";
@@ -26,6 +25,7 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
         setBlockOptSelected,
         handleBlockClick,
         emailTemplates,
+        resetBlock
     } = useBlockContext();
 
     const [customTemplate, setCustomTemplate] = useState(false);
@@ -37,7 +37,7 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
             title: "New Template",
             subject: "",
             body: "",
-            type: "custom",
+            emailType: "custom",
             variables: {}
         };
 
@@ -45,7 +45,7 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
             title: newTemplate.title,
             subject: newTemplate.subject,
             body: newTemplate.body,
-            type: newTemplate.type,
+            emailType: newTemplate.emailType,
             variables: newTemplate.variables,
         });
     }
@@ -65,8 +65,8 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                 addNewNode("email", emailObj);
                 break;
             case 'wait':
-                if (!waitBlock.value) {
-                    toast.error("Select wait value");
+                if (!waitBlock.delay) {
+                    toast.error("Select wait delay value");
                     return;
                 }
                 if (!waitBlock.format) {
@@ -74,28 +74,18 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                     return;
                 }
                 const waitObj = {
-                    label: `${waitBlock?.value} ${waitBlock.format}`,
-                    delay: convertToSeconds(waitBlock?.value, waitBlock?.format),
+                    label: `${waitBlock?.delay} ${waitBlock.format}`,
+                    delay: waitBlock?.delay,
+                    format: waitBlock?.format
                 }
                 addNewNode("wait", waitObj);
-
                 break;
             default:
                 toast.error("Could not create block");
                 return;
         }
         closeBlockModal();
-        setBlockOptSelected("");
-        setNodeType("");
-        setEmailBlock({
-            title: emailTemplates[0].title,
-            subject: emailTemplates[0].subject,
-            body: emailTemplates[0].body
-        });
-        setWaitBlock({
-            value: "",
-            format: "Minutes"
-        });
+        resetBlock();
     }
 
     const handleVariableChange=(value,key)=>{
@@ -126,8 +116,8 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                         right: 'auto',
                         bottom: 'auto',
                         transform: 'translate(-50%, -50%)',
-                        height: '400px', // Set your desired height here
-                        width: '650px', // Optional: Set width as well
+                        height: '400px',
+                        width: '650px', 
                         background: '#F1F1F1'
                     }
                 }}>
@@ -280,12 +270,13 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                                                 <input
                                                     className="w-full pl-3 py-2 text-gray-600"
                                                     placeholder="Enter digit between 0-9 "
-                                                    value={waitBlock.value}
+                                                    value={waitBlock.delay}
                                                     type="text"
                                                     onChange={(e) => {
                                                         const input = e.target.value;
                                                         const numeric = input.replace(/[^0-9]/g, "");
-                                                        setWaitBlock(prev => ({ ...prev, value: numeric }));
+                                                        console.log(numeric);
+                                                        setWaitBlock(prev => ({ ...prev, delay: numeric.toString() }));
                                                     }}
                                                     required />
                                                 <select

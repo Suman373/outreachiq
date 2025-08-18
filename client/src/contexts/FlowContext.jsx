@@ -4,6 +4,7 @@ import { createEdge, createNode, validateFlow } from "../utils";
 import toast from "react-hot-toast";
 import { useLeadContext } from "./LeadContext";
 import { nanoid } from "nanoid";
+import { postFlowData } from "../api/flow";
 
 const FlowContext = createContext();
 
@@ -76,16 +77,21 @@ export const FlowProvider = ({ children }) => {
         updateFlow("edges", finalEdges);
     };
 
-    const scheduleFlow = () => {
+    const scheduleFlow = async () => {
         try {
             updateFlow("loading", true);
             const leadListObj = savedLeadLists.find((lead) => lead.title === flowData?.leadSrcData?.title);
             const errorMessage = validateFlow({ flowData, leadListObj });
+            console.log(flowData,leadListObj?.leads);
             // console.log(errorMessage);
             if (errorMessage) {
                 throw new Error(errorMessage);
             }
             //schedule flow if no error
+            const response = await postFlowData(flowData,leadListObj.leads);
+            if(!response){
+                throw new Error("Failed to schedule flow");
+            }
             toast.success("Flow scheduled successfully");
         } catch (error) {
             console.log("Error while scheduling flow", error);
@@ -106,10 +112,24 @@ export const FlowProvider = ({ children }) => {
         });
     }
 
-    const deleteFlow = () => {
-        updateFlow("loading", true);
-        // call API to delete here
-        resetFlow();
+    const deleteFlow = async () => {
+        try {
+            if (!flowData?.id) {
+                toast.error("Flow id not valid");
+                return;
+            }
+            updateFlow("loading", true);
+            if (!confirm("Are you sure you want to delete this flow?")) return;
+            // call api to delete flow
+            resetFlow();
+            toast.success("Flow deleted successfully");
+            setFlowStarted(false);
+        } catch (error) {
+            console.error("Error while deleting flow", error);
+            toast.error("Failed to delete flow");
+        } finally {
+            updateFlow("loading", false);
+        }
     };
 
 

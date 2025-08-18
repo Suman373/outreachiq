@@ -51,8 +51,8 @@ export const extractVariablesMap = (textList) => {
 
 
 export const validateFlow = (data)=>{
-    const flowObj = data.flowData;
-    const leadList =  data.leadListObj.leads;
+    const flowObj = data?.flowData;
+    const leadList =  data.leadListObj?.leads;
     // console.log("Validation flowobj", flowObj);
     if(!flowObj.leadSrcData?.title || flowObj.leadSrcData?.title?.toLowerCase() === "sample leads") return "Sample Leads or empty leads are not allowed.";
     if(!leadList || leadList.length < 1) return "Leads are empty or invalid"

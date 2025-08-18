@@ -3,7 +3,7 @@
         {
             "id": "tpl_welcome1",
             "title": "Welcome Email",
-            "type": "template",
+            "emailType": "template",
             "subject": "Welcome to {{company}}!",
             "body": "Hi {{name}},\n\nThanks for signing up with us. We're thrilled to have you on board. If you have any questions or need help getting started, don't hesitate to reach out.\n\nBest,\n{{senderName}}",
             "aiGenerated": false,
@@ -15,7 +15,7 @@
         {
             "id": "tpl_followup1",
             "title": "Follow-Up After No Response",
-            "type": "template",
+            "emailType": "template",
             "subject": "Just checking in...",
             "body": "Hi {{name}},\n\nI wanted to follow up on my previous message. I understand things get busy — let me know if there's a better time to connect or if you'd prefer I check back later.\n\nBest regards,\n{{senderName}}",
             "aiGenerated": false,
@@ -26,7 +26,7 @@
         {
             "id": "tpl_offer1",
             "title": "Special Offer Email",
-            "type": "template",
+            "emailType": "template",
             "subject": "Exclusive Offer Just for You",
             "body": "Hey {{name}},\n\nWe’re running a limited-time offer that we think you’ll love! Use code {{promoCode}} at checkout to get {{discountPercent}} off your next purchase.\n\nAct fast — this deal expires in {{expiryTime}}!\n\nCheers,\n{{senderTeam}}",
             "aiGenerated": false,
@@ -40,7 +40,7 @@
         {
             "id": "tpl_intro1",
             "title": "Introductory Cold Email",
-            "type": "template",
+            "emailType": "template",
             "subject": "Let’s Connect!",
             "body": "Hi {{name}},\n\nI came across your work at {{company}} and was impressed. I’d love to explore how we might be able to collaborate or support your goals in {{focusArea}}.\n\nLet me know if you're open to a quick chat.\n\nThanks,\n{{senderName}}",
             "aiGenerated": false,
@@ -53,7 +53,7 @@
         {
             "id": "tpl_demo1",
             "title": "Product Demo Invite",
-            "type": "template",
+            "emailType": "template",
             "subject": "Would You Like a Quick Demo?",
             "body": "Hi {{name}},\n\nWe’d love to show you how {{productName}} can help solve {{painPoint}}. Let me know if you're available for a 15-minute walkthrough this week.\n\nLooking forward to connecting,\n{{senderName}}",
             "aiGenerated": false,
