@@ -1,6 +1,6 @@
 {
   "name": "email-seq-server",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "backend server for email sequence flow app",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,9 @@
     "test": "jest"
   },
   "nodemonConfig": {
-    "ignore": ["**/logs**"]
+    "ignore": [
+      "**/logs**"
+    ]
   },
   "keywords": [],
   "author": "suman-roy",
