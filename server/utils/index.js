@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {APP_SECRET} = require('../config/index');
+const { APP_SECRET } = require('../config/index');
+const fs = require('fs');
+const path = require('path');
 
 const timeUnitsInSeconds = {
     "Minutes": 60,        // 1 minute = 60 seconds
@@ -9,33 +11,32 @@ const timeUnitsInSeconds = {
     "Weeks": 604800       // 1 week = 604800 seconds
 };
 
-module.exports.GenerateSalt = async()=>{
+module.exports.GenerateSalt = async () => {
     return await bcrypt.genSalt(10);
 }
 
-
-module.exports.HashPassword = async(password,salt)=>{
-    return await bcrypt.hash(password,salt);
+module.exports.HashPassword = async (password, salt) => {
+    return await bcrypt.hash(password, salt);
 }
 
-module.exports.ValidatePassword = async (password, hashedPassword)=>{
+module.exports.ValidatePassword = async (password, hashedPassword) => {
     return await bcrypt.compare(password, hashedPassword);
 }
 
 
-module.exports.GenerateJWT = async(payload)=>{
+module.exports.GenerateJWT = async (payload) => {
     try {
-        const token =  await jwt.sign(payload, APP_SECRET,{
+        const token = await jwt.sign(payload, APP_SECRET, {
             expiresIn: "30d"
         });
-        if(token) return token;
+        if (token) return token;
         else throw new Error("Token generation failed");
     } catch (error) {
         console.log(error);
     }
 }
 
-module.exports.ValidateJWT = async(req)=>{
+module.exports.ValidateJWT = async (req) => {
     try {
         const token = req.get("Authorization");
         console.log(token);
@@ -48,6 +49,38 @@ module.exports.ValidateJWT = async(req)=>{
     }
 }
 
-module.exports.ConvertToSeconds = (val,unit)=>{
+module.exports.ConvertToSeconds = (val, unit) => {
     return val * timeUnitsInSeconds[unit]
+}
+
+module.exports.LOG_LEVELS = Object.freeze({
+    WARN: "WARN",
+    ERROR: "ERROR",
+    INFO: "INFO"
+});
+
+module.exports.LOG_PATHS = Object.freeze({
+    HEALTHLOG: "healthlog",
+    SERVICELOG: "servicelog",
+    AUTHLOG: "authlog",
+    CONTROLLERLOG: "controllerlog"
+})
+
+
+module.exports.Logger = (level, filename, data) => {
+    try {
+        const timeStamp = new Date().toISOString();
+        const logContent = {
+            level,
+            time: timeStamp,
+            ...data
+        };
+        fs.appendFile(path.join(__dirname, "..", "logs",`${filename}.jsonl`), JSON.stringify(logContent,2,null), (err)=> {
+            if(err){
+                throw new Error(err);
+            }
+        });
+    } catch (error) {
+        console.log(`Failed to write in ${filename} : ${error}`);
+    }
 }

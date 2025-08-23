@@ -22,14 +22,17 @@ const registerUser = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            salt
         });
 
-        const token = await GenerateJWT({_id:newUser._id});
+        const token = await GenerateJWT({id:newUser.id, subscriptionPlanName: newUser.subscriptionPlanName});
 
         res.status(201).json({
             message: 'User registered successfully',
-            user: newUser,
+            user: {
+                id: newUser.id,
+                name: newUser.name,
+                email: newUser.email,
+            },
             token:token,
         });
 
@@ -58,7 +61,7 @@ const loginUser = async(req,res)=>{
             return res.status(401).json({message: 'Invalid password'});
         }
 
-        const token = await GenerateJWT({_id: existingUser._id});
+        const token = await GenerateJWT({id: existingUser.id, subscriptionPlanName: existingUser.subscriptionPlanName});
         return res.status(200).json({
             message: 'User login successful',
             user: existingUser,

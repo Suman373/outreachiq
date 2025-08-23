@@ -1,19 +1,37 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
+    id: { type: String, required: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    subscriptionPlanName: { type: String, enum: ["free", "pro", "enterprise"], default: "free" },
+    quota: {
+        flows: { type: Number, default: 1 },
+        nodes: { type: Number, default: 4 },
+        leads: { type: Number, default: 10 },
+        emails: { type: Number, default: 40 },
+        aiAssists: {type: Number, default: 4}
+    },
+    usage: {
+        flows: { type: Number, default: 0 },
+        nodes: { type: Number, default: 0 },
+        leads: { type: Number, default: 0 },
+        emails: { type: Number, default: 0 },
+        aiAssists: {type: Number, default: 0}
+    },
+    renewalDate: { type: Date },
     flows: [{ type: mongoose.Schema.Types.ObjectId, ref: 'flow' }],
 }, {
     toJSON: {
         transform(doc, ret) {
             delete ret.password;
-            delete ret.salt;
             delete ret.__v;
         }
     }, timestamps: true
 });
+
+UserSchema.index({id:1});
 
 module.exports = mongoose.model('user', UserSchema);
 
