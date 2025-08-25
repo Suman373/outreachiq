@@ -1,16 +1,18 @@
-import { useState } from "react";
 import Flow from "../../components/Flow";
 import RightSidebar from "../../components/RightSidebar";
+import { useAuthContext } from "../../contexts/AuthContext";
 import { useFlowContext } from "../../contexts/FlowContext";
 
 const Home = ({ setIsLoggedIn }) => {
     const {flowStarted, setFlowStarted} = useFlowContext();
+    const {userObj} = useAuthContext();
     return (
         <>
             <div className="min-h-screen grid grid-cols-12">
                 {/* Left Sidebar */}
                 <div className="col-span-2 bg-gray-800 text-white p-4">
-                    <h2 className="text-xl font-bold text-center">Email Sequence Tool</h2>
+                    <h2 className="text-xl font-bold text-center">OutreachIQ</h2>
+                    {Object.values(userObj)?.map((i,index)=> <p key={index}>{typeof(i) !== 'object' && i}</p>)}
                     <ul className="p-2 m-1 flex flex-col gap-3">
                         {!flowStarted && <ListItem text={"Create Flow"} onClick={() => { setFlowStarted(true) }} />}
                         <ListItem text={"Settings"} onClick={() => { }} />

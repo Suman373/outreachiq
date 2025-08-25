@@ -6,6 +6,7 @@ import packageJson from '../../../package.json';
 import LogoTicker from "../../components/shared/misc/LogoTicker";
 import productImg from '../../assets/product-image.png';
 import Footer from "../../components/shared/misc/Footer";
+import ScrollToTop from "../../components/shared/misc/ScrollToTop";
 
 const whychooseus = [
     {
@@ -90,6 +91,7 @@ const pricingTiers = [
 const Landing = () => {
     return (
         <> <Navbar />
+            <ScrollToTop />
             <section className="min-h-[100%] -mt-20 relative">
                 <div className="">
                     {/* Hero */}
@@ -191,16 +193,16 @@ const Landing = () => {
                                             </li>
                                         ))}
                                     </ul>
-                                    <a 
-                                    href={pricing.slug}
-                                    className={`cursor-pointer btn btn-primary w-full mt-[30px] ${pricing.popular && 'bg-white text-black'}`}>{pricing.buttonText}</a>
+                                    <a
+                                        href={pricing.slug}
+                                        className={`cursor-pointer btn btn-primary w-full mt-[30px] ${pricing.popular && 'bg-white text-black'}`}>{pricing.buttonText}</a>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
             </section>
-           <Footer/>
+            <Footer />
         </>
     )
 }

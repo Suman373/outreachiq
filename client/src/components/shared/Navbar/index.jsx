@@ -4,11 +4,17 @@ import Logo from '/vite.svg';
 import { useEffect, useRef, useState } from 'react';
 import AnimatedButton from '../misc/AnimatedButton';
 import { BsArrowRight } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
 
+    const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef();
+
+    const handleNavCTA = ()=>{
+        navigate('/register');
+    }
 
     useEffect(() => {
         const checkMenuOpen = (e) => {
@@ -44,6 +50,7 @@ const Navbar = () => {
                             <a href="#">Updates</a>
                             <a href="#">Help</a>
                             <AnimatedButton
+                                onClick={handleNavCTA}
                                 primary="#691e87"
                                 secondary="#000000"
                                 textBeforeColor="#fff"
@@ -64,7 +71,9 @@ const Navbar = () => {
                             <a href="#">Customers</a>
                             <a href="#">Updates</a>
                             <a href="#">Help</a>
-                            <button className='btn btn-primary text-sm md:text-base'>
+                            <button 
+                            onClick={handleNavCTA}
+                            className='btn btn-primary text-sm md:text-base'>
                                 Get for free</button>
                         </nav>
                     </div>
