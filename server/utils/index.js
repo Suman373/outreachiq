@@ -19,7 +19,7 @@ module.exports.HashPassword = async (password, salt) => {
     return await bcrypt.hash(password, salt);
 }
 
-module.exports.ValidatePassword = async (password, hashedPassword) => {
+module.exports.ValidateHashedPassword = async (password, hashedPassword) => {
     return await bcrypt.compare(password, hashedPassword);
 }
 
@@ -84,3 +84,15 @@ module.exports.Logger = (level, filename, data) => {
         console.log(`Failed to write in ${filename} : ${error}`);
     }
 }
+
+
+module.exports.ValidateEmail = (email)=>{
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+module.exports.ValidatePassword = (password) => {
+  const regex =
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+  return regex.test(password);
+};

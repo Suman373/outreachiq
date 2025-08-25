@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const {nanoid} = require('nanoid');
 
 const UserSchema = new mongoose.Schema({
-    id: { type: String, required: true },
+    id: { type: String, required: true, unique: true, default: ()=> nanoid(14)},
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -30,8 +31,6 @@ const UserSchema = new mongoose.Schema({
         }
     }, timestamps: true
 });
-
-UserSchema.index({id:1});
 
 module.exports = mongoose.model('user', UserSchema);
 

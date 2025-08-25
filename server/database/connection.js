@@ -5,7 +5,6 @@ const { Logger, LOG_LEVELS, LOG_PATHS } = require('../utils');
 module.exports = async () => {
     try {
         const {connection: conn} = await mongoose.connect(MONGODB_URI);
-        await conn.dropDatabase();
         if (NODE_ENV === "production") {
             Logger(LOG_LEVELS.INFO, LOG_PATHS.HEALTHLOG, { title: "DATABASE CONNECTION SUCCESSFUL", host: conn.host, port: conn.port })
         }

@@ -8,7 +8,7 @@ module.exports = async(app)=>{
     app.use(cors({origin:"*"}));
 
     // status check
-    app.get('/',(req,res)=> res.send("Welcome to OutreachIQ Backend Web Server"));
+    app.get('/',(req,res)=> res.status(200).send("Welcome to OutreachIQ Backend Web Server"));
 
     // api routes
     app.use('/api/v1/users',UserRoute);
