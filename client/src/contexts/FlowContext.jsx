@@ -164,7 +164,8 @@ export const FlowProvider = ({ children }) => {
             handleNodesChange,
             handleEdgesChange,
             flowStarted,
-            setFlowStarted
+            setFlowStarted,
+            resetFlow
         }}>
             {children}
         </FlowContext.Provider>

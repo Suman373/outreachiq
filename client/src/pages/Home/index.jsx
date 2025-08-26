@@ -1,25 +1,46 @@
+import React from "react";
 import Flow from "../../components/Flow";
 import RightSidebar from "../../components/RightSidebar";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useFlowContext } from "../../contexts/FlowContext";
+import { IoMdAdd, IoIosSettings } from "react-icons/io";
+import { RxReset } from "react-icons/rx";
+import { MdOutlineLogout } from "react-icons/md";
+import toast from "react-hot-toast";
 
-const Home = ({ setIsLoggedIn }) => {
-    const {flowStarted, setFlowStarted} = useFlowContext();
-    const {userObj} = useAuthContext();
+const Home = () => {
+    const {
+        flowStarted,
+        setFlowStarted,
+        resetFlow
+    } = useFlowContext();
+    const {
+        userObj,
+        logoutAndClearUser } = useAuthContext();
+
+    const handleReset = () => {
+        setFlowStarted(false);
+        resetFlow();
+    }
+
+    const handleLogout = ()=> {
+        logoutAndClearUser();
+        resetFlow();
+        toast.success("You have logged out successfully");
+    }
+
     return (
         <>
             <div className="min-h-screen grid grid-cols-12">
                 {/* Left Sidebar */}
                 <div className="col-span-2 bg-gray-800 text-white p-4">
                     <h2 className="text-xl font-bold text-center">OutreachIQ</h2>
-                    {Object.values(userObj)?.map((i,index)=> <p key={index}>{typeof(i) !== 'object' && i}</p>)}
-                    <ul className="p-2 m-1 flex flex-col gap-3">
-                        {!flowStarted && <ListItem text={"Create Flow"} onClick={() => { setFlowStarted(true) }} />}
-                        <ListItem text={"Settings"} onClick={() => { }} />
-                        <ListItem text={"Logout"} onClick={() => {
-                            localStorage.removeItem('email-seq-user');
-                            setIsLoggedIn(false);
-                        }} />
+                    {Object.values(userObj)?.map((i, index) => <p key={index}>{typeof (i) !== 'object' && i}</p>)}
+                    <ul className="m-1 flex flex-col gap-3">
+                        {!flowStarted && <ListItem icon={<IoMdAdd />} text={"Create Flow"} onClick={() => { setFlowStarted(true) }} />}
+                        {flowStarted && <ListItem icon={<RxReset />} text={"Reset flow"} onClick={handleReset} />}
+                        <ListItem icon={<IoIosSettings />} text={"Settings"} onClick={() => { }} />
+                        <ListItem icon={<MdOutlineLogout />} text={"Logout"} onClick={handleLogout} />
                     </ul>
                 </div>
 
@@ -36,7 +57,7 @@ const Home = ({ setIsLoggedIn }) => {
                     }
                 </div>
                 <div className="col-span-2 bg-neutral-800 p-4">
-                   <RightSidebar flowStarted={flowStarted}/>
+                    <RightSidebar flowStarted={flowStarted} />
                 </div>
             </div>
             {/* <Footer/> */}
@@ -45,10 +66,11 @@ const Home = ({ setIsLoggedIn }) => {
 }
 
 
-const ListItem = ({ text, onClick }) => {
+const ListItem = ({ icon, text, onClick }) => {
     return (
-        <li className="px-1 py-2 text-md text-white rounded-md text-center bg-cyan-800 hover:opacity-65 cursor-pointer"
+        <li className="py-2 text-md text-white rounded-md inline-flex gap-2 items-center justify-start px-3 bg-cyan-800 hover:opacity-65 cursor-pointer"
             onClick={onClick}>
+            {icon ? React.cloneElement(icon, { className: "text-md" }) : ""}
             {text || "ListItem"}
         </li>
     )

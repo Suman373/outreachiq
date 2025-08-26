@@ -18,4 +18,13 @@ export const loginUser = async (email, password) => {
     }
 }
 
+export const logoutUser = async()=>{
+    try {
+        const data = await AXIOS_POST(`/auth/logout`,{});
+        return data;
+    } catch (error) {
+        throw error?.response?.data || error;
+    }
+}
+
 

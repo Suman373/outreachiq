@@ -9,7 +9,10 @@ import { loginUser, registerUser } from '../../api/auth';
 
 const Auth = () => {
 
-    const {setIsLoggedIn } = useAuthContext();
+    const {
+        setIsLoggedIn,
+        fetchAndSetUser
+    } = useAuthContext();
     const navigate = useNavigate();
     const [showLogin, setShowLogin] = useState(false);
 
@@ -45,7 +48,7 @@ const Auth = () => {
     const handleSignUpSubmit = async (e) => {
         e.preventDefault();
         try {
-            const {name, email, password, tcAgreed } = signupData;
+            const { name, email, password, tcAgreed } = signupData;
             if (!validateEmail(email)) {
                 return toast.error('Please enter a valid email');
             }
@@ -55,8 +58,8 @@ const Auth = () => {
             if (!tcAgreed) {
                 return toast.error("Please agree to the T&C to continue");
             }
-            const data = await registerUser(name,email,password);
-            console.log(data);
+            const data = await registerUser(name, email, password);
+            // console.log(data);
             if (data?.status !== 201) throw new Error(data?.data?.message);
             setSignupData({ name: '', email: '', password: '' });
             toast.success("Registration successful");
@@ -70,17 +73,19 @@ const Auth = () => {
     const handleSignInSubmit = async (e) => {
         e.preventDefault();
         try {
-            const {email, password} = siginData;
+            const { email, password } = siginData;
             if (!validateEmail(email)) {
                 return toast.error('Please enter a valid email');
             }
             if (!validatePassword(password)) {
                 return toast.error('Please enter a valid password');
             }
-            const data = await loginUser(email,password);
-            console.log(data);
+            const data = await loginUser(email, password);
+            // console.log(data);
             if (data?.status !== 200) throw new Error(data?.data?.message);
-            localStorage.setItem('outreachiq-user', JSON.stringify(data?.data?.user?.id));
+            const userId = data?.data?.user?.id;
+            localStorage.setItem('outreachiq-user', JSON.stringify(userId));
+            fetchAndSetUser(userId);
             toast.success("Login successful");
             setSiginData({ name: '', email: '', password: '' });
             setIsLoggedIn(true);
