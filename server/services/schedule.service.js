@@ -1,7 +1,7 @@
 const Agenda = require('agenda');
 const constants = require('../constants/');
-const { sendEmail } = require('./email.service');
 const { Logger, LOG_LEVELS, LOG_PATHS } = require('../utils');
+const {sendEmail} = require("./email.service");
 
 const agenda = new Agenda({
     db: {

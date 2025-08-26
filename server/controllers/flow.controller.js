@@ -1,4 +1,4 @@
-const { processFlow } = require('../services/flow.service');
+const { FLOW_SERVICE } = require('../services/index.js');
 const { Logger, LOG_LEVELS, LOG_PATHS } = require('../utils');
 
 
@@ -123,7 +123,7 @@ const scheduleFlow = async (req, res) => {
         // if(!flowData.userId){
         //     res.status(404).json({message:"User not found"});
         // }
-        await processFlow(flowData, leads);
+        await FLOW_SERVICE.processFlow(flowData, leads);
         // return res.status(200).json({ message: "Flow scheduled successfully" });
     } catch (error) {
         Logger(LOG_LEVELS.ERROR, LOG_PATHS.CONTROLLERLOG, { title: "SCHEDULE FLOW FAILED", message: error.message, ...logContent })

@@ -80,7 +80,7 @@ const Auth = () => {
             const data = await loginUser(email,password);
             console.log(data);
             if (data?.status !== 200) throw new Error(data?.data?.message);
-            localStorage.setItem('outreachiq-user', JSON.stringify(data?.data?.user));
+            localStorage.setItem('outreachiq-user', JSON.stringify(data?.data?.user?.id));
             toast.success("Login successful");
             setSiginData({ name: '', email: '', password: '' });
             setIsLoggedIn(true);

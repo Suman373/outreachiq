@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { UserRoute, FlowRoute } = require('./routes/index');
+const { FlowRoute, AuthRoute, UserRoute } = require('./routes/index');
 
 module.exports = async(app)=>{
     app.use(express.json());
@@ -11,6 +11,7 @@ module.exports = async(app)=>{
     app.get('/',(req,res)=> res.status(200).send("Welcome to OutreachIQ Backend Web Server"));
 
     // api routes
-    app.use('/api/v1/users',UserRoute);
+    app.use('/api/v1/auth',AuthRoute);
     app.use('/api/v1/flows', FlowRoute);
+    app.use('/api/v1/users', UserRoute);
 }

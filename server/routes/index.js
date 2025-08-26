@@ -1,4 +1,5 @@
 module.exports = {
-    UserRoute: require('./user.route'),
+    AuthRoute: require('./auth.route'),
     FlowRoute: require('./flow.route'),
+    UserRoute: require('./user.route')
 }

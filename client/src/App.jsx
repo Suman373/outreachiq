@@ -7,12 +7,12 @@ import ResetScroll from "./components/shared/misc/ResetScroll";
 
 const App = () => {
 
-  const { isLoggedIn, setIsLoggedIn, setUserObj } = useAuthContext();
+  const { isLoggedIn, setIsLoggedIn,fetchAndSetUser } = useAuthContext();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('outreachiq-user'));
-    if (user) {
-      setUserObj(user)
+    const userId = JSON.parse(localStorage.getItem('outreachiq-user'));
+    if (userId) {
+      fetchAndSetUser(userId);
       setIsLoggedIn(true);
     }
   }, [setIsLoggedIn]);

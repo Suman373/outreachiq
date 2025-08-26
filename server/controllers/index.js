@@ -1,4 +1,5 @@
 module.exports = {
-    UserController: require('./user.controller'),
-    FlowController: require('./flow.controller')
+    AuthController: require('./auth.controller'),
+    FlowController: require('./flow.controller'),
+    UserController: require('./user.controller')
 }
