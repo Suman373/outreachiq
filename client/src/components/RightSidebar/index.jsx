@@ -4,14 +4,19 @@ import { FaAngleDown } from "react-icons/fa";
 import { useLeadContext } from "../../contexts/LeadContext";
 import { useState } from "react";
 import { MdDelete, MdPlayArrow } from "react-icons/md";
+import TextBadge from "../shared/misc/TextBadge";
+import { IoPerson } from "react-icons/io5";
+import { PiExportBold } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
 
-const RightSidebar = ({ flowStarted }) => {
+const RightSidebar = () => {
 
     const {
         scheduleFlow,
         flowData,
         updateFlow,
-        deleteFlow
+        deleteFlow,
+        flowStarted
     } = useFlowContext();
 
     const { savedLeadLists } = useLeadContext();
@@ -26,21 +31,32 @@ const RightSidebar = ({ flowStarted }) => {
         )
     }
 
+    const handleViewProfileClick = ()=>{
+
+    }
+
+    // to be done later when offering pro subs
+    const handleExportClick = ()=>{
+
+    }
+
     return (
         <div className="flex flex-col gap-1">
             <div className="flex justify-between">
-                <Header />
+                <Header 
+                handleExportClick={handleExportClick} 
+                handleViewProfileClick={handleViewProfileClick} />
                 <div className="flex gap-2 items-center">
                     <button
                         disabled={!hasSequence}
-                        className='h-8 p-2 rounded-md flex items-center gap-1 justify-center bg-green-400 text-green-800'
+                        className='h-8 p-2 rounded-md flex items-center gap-1 justify-center bg-green-700 text-white'
                         onClick={scheduleFlow}>
                         <MdPlayArrow size={22} />
                         <p className="text-xs">Schedule</p>
                     </button>
                     <button
                         disabled={!hasSequence}
-                        className='h-8 p-2 rounded-md flex items-center gap-1 justify-center bg-red-400 text-red-800'
+                        className='h-8 p-2 rounded-md flex items-center gap-1 justify-center bg-red-600 text-white'
                         onClick={deleteFlow}>
                         <MdDelete size={16} />
                         <p className="text-xs">Delete</p>
@@ -71,7 +87,7 @@ const RightSidebar = ({ flowStarted }) => {
 }
 
 
-const Header = () => {
+const Header = ({handleExportClick, handleViewProfileClick}) => {
     const [expandProfile, setExpandProfile] = useState(false);
     return (
         <div className="flex justify-between">
@@ -81,7 +97,16 @@ const Header = () => {
                 className="flex gap-1 items-center cursor-pointer relative">
                 <img className="h-8 md:w-8 rounded-full" src="https://images.unsplash.com/photo-1556983990-db5d0cc3c67e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGR1bW15fGVufDB8fDB8fHww" alt="profile" />
                 <span className="transition-all duration-1000">{expandProfile ? <FaAngleUp className="text-neutral-200" /> : <FaAngleDown className="text-neutral-200" />}</span>
-                {expandProfile && <div className=" w-[150px] h-[100px] absolute -left-[50px] top-[30px] bg-neutral-800 border  border-neutral-600 rounded-md">
+                {expandProfile && <div className=" w-[200px] h-[100px] flex flex-col items-center justify-start gap-2 p-2 absolute -left-[150px] top-[30px] bg-neutral-800 border  border-neutral-600 rounded-md">
+                    <button 
+                        onClick={handleViewProfileClick}
+                        className="bg-brand/60 text-white rounded-md text-sm w-full py-2 flex items-center justify-start gap-2 px-2">
+                      <IoPerson/>  View Profile
+                    </button>
+                    <button 
+                    className="bg-brand/60 text-white items-center rounded-md text-sm w-full py-2 flex justify-start gap-2 px-2">
+                      <PiExportBold />  Export Flow <TextBadge type={"paywall"} text={"Pro"}/>
+                    </button>
                 </div>}
             </div>
         </div>

@@ -5,10 +5,11 @@ import { MdAutoAwesome } from 'react-icons/md';
 import { FaWindowClose } from "react-icons/fa";
 import Modal from 'react-modal';
 import constants from "../../../constants";
-import {  extractVariablesMap } from "../../../utils";
+import { extractVariablesMap } from "../../../utils";
 import toast from "react-hot-toast";
 import { useBlockContext } from "../../../contexts/BlockContext";
 import { nanoid } from "nanoid";
+import { useAuthContext } from "../../../contexts/AuthContext";
 
 Modal.setAppElement('#root');
 
@@ -30,6 +31,8 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
 
     const [customTemplate, setCustomTemplate] = useState(false);
 
+    const { userObj } = useAuthContext();
+
     const createNewTemplate = () => {
         setCustomTemplate(true);
         const newTemplate = {
@@ -38,21 +41,25 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
             subject: "",
             body: "",
             emailType: "custom",
-            variables: {}
+            variables: {},
+            aiGenerated: false
         };
 
         setEmailBlock({
-            title: newTemplate.title,
-            subject: newTemplate.subject,
-            body: newTemplate.body,
-            emailType: newTemplate.emailType,
-            variables: newTemplate.variables,
+            ...newTemplate
         });
     }
 
     const handleNodeCreate = (nodeType) => {
         switch (nodeType) {
             case 'email':
+                // valid variables
+                console.log(emailBlock.variables);
+                const isValidVariables = Object.values(emailBlock?.variables).every(v => v.length > 0);
+                if (!isValidVariables) {
+                    toast.error("Variable values are empty.\n Please enter values for variables.");
+                    return;
+                }
                 const emailObj = {
                     label: `${new Date().toDateString()}`,
                     title: emailBlock.title,
@@ -88,9 +95,9 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
         resetBlock();
     }
 
-    const handleVariableChange=(value,key)=>{
+    const handleVariableChange = (value, key) => {
         // console.log(value,key);
-        setEmailBlock(prev=>({...prev,variables:{...prev.variables,[key]:value}}));
+        setEmailBlock(prev => ({ ...prev, variables: { ...prev.variables, [key]: value } }));
     }
 
     useEffect(() => {
@@ -117,16 +124,19 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                         bottom: 'auto',
                         transform: 'translate(-50%, -50%)',
                         height: '400px',
-                        width: '650px', 
-                        background: '#F1F1F1'
+                        width: '650px',
+                        background: '#2e2e2e',
+                        borderRadius: '1rem'
                     }
                 }}>
                 <div className="h-full w-full flex flex-col">
                     {/* header of modal */}
-                    <div className='p-2 flex justify-between items-center sticky top-0 z-10 bg-[#F1F1F1]'>
+                    <div className='p-2 flex justify-between items-center sticky top-0 z-10 text-white'>
                         <div>
-                            <h1 className='text-xl font-semibold text-gray-800'>Add new block</h1>
-                            <p className='text-sm text-gray-500'>Click on a block to configure and add it in a sequence</p></div>
+                            <h1 className='text-xl font-semibold'>Add new block</h1>
+                            <p className='text-sm my-2'>Click on a block to configure and add it in a sequence</p>
+                            <p className="text-sm text-amber-300">Your plan allows maximum {userObj.quota.nodes} blocks</p>
+                        </div>
                         <FaWindowClose
                             className='text-red-500'
                             onClick={() => {
@@ -138,16 +148,16 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                     </div>
                     {/* scrollable body */}
                     <div className="overflow-y-scroll overflow-x-hidden py-2 px-3">
-                        <h1 className='text-base my-2 font-semibold text-gray-800'>Outreach</h1>
+                        <h1 className='text-base my-2 font-semibold text-neutral-100'>Outreach</h1>
                         {
                             blockOptSelected ?
                                 <>
                                     {nodeType === "email" ?
-                                        <div className="flex justify-between mb-4 items-center">
-                                            <p className='text-sm  text-gray-600'>
+                                        <div className="flex justify-between mb-4 items-center text-white">
+                                            <p className='text-sm'>
                                                 {customTemplate ? "Create your own email template" : "Select an email template from the list"}
                                             </p>
-                                            <p className="text-blue-600 text-sm cursor-pointer"
+                                            <p className="text-blue-200 text-sm cursor-pointer"
                                                 onClick={() => {
                                                     if (customTemplate) {
                                                         setCustomTemplate(false);
@@ -163,8 +173,8 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                                                 {customTemplate ? "Choose from list" : "Create New"}
                                             </p>
                                         </div> :
-                                        <div className="flex justify-between mb-4 items-center">
-                                            <p className='text-sm  text-gray-600'>
+                                        <div className="flex justify-between mb-4 items-center text-white">
+                                            <p className='text-sm'>
                                                 Select a time interval
                                             </p>
                                         </div>
@@ -211,7 +221,7 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
 
                                                 <label className="input-label flex justify-between" htmlFor="email-subject">
                                                     Subject
-                                                    {customTemplate && <button className="flex items-center gap-2 text-blue-600">
+                                                    {customTemplate && <button className="flex items-center gap-2  text-amber-200">
                                                         <MdAutoAwesome className="text-lg" />
                                                         Enhance with AI
                                                     </button>}
@@ -225,7 +235,7 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
 
                                                 <label className="input-label flex justify-between" htmlFor="email-body">
                                                     Body
-                                                    {customTemplate && <button className="flex items-center gap-2 text-blue-600">
+                                                    {customTemplate && <button className="flex items-center gap-2  text-amber-200">
                                                         <MdAutoAwesome className="text-lg" />
                                                         Enhance with AI
                                                     </button>}
@@ -242,16 +252,16 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                                                     {
                                                         emailBlock?.variables ?
                                                             Object.entries(emailBlock.variables).map(([key, value]) => <>
-                                                                <div className="grid grid-cols-2 gap-2">
+                                                                <div className="grid grid-cols-2 gap-2 my-2">
                                                                     <input
                                                                         disabled={true}
-                                                                        className="input-field text-gray-500"
+                                                                        className="input-field"
                                                                         value={key}
                                                                         type="text" />
                                                                     <input
                                                                         className="input-field"
                                                                         value={value}
-                                                                        onChange={(e)=>handleVariableChange(e.target.value, key)}
+                                                                        onChange={(e) => handleVariableChange(e.target.value, key)}
                                                                         type="text" />
                                                                 </div>
                                                             </>)
@@ -259,7 +269,7 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                                                     }
                                                 </div>
                                                 <button
-                                                    className="h-fit w-24 px-2 py-3 m-2 bg-blue-400 text-white rounded-md"
+                                                    className="h-fit w-24 px-2 py-3 m-2 bg-brand text-white rounded-md"
                                                     onClick={() => handleNodeCreate("email")}>
                                                     <p className="text-sm">Save</p>
                                                 </button>
@@ -268,14 +278,14 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                                             // Wait/Delay 
                                             <div className='flex flex-col justify-evenly items-center flex-wrap gap-2 '>
                                                 <input
-                                                    className="w-full pl-3 py-2 text-gray-600"
+                                                    className="w-full pl-3 py-2 "
                                                     placeholder="Enter digit between 0-9 "
                                                     value={waitBlock.delay}
                                                     type="text"
                                                     onChange={(e) => {
                                                         const input = e.target.value;
                                                         const numeric = input.replace(/[^0-9]/g, "");
-                                                        console.log(numeric);
+                                                        // console.log(numeric);
                                                         setWaitBlock(prev => ({ ...prev, delay: numeric.toString() }));
                                                     }}
                                                     required />
@@ -294,7 +304,7 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                                                         ))}
                                                 </select>
                                                 <button
-                                                    className="h-fit w-24 px-2 py-3 m-2 bg-blue-400 text-white rounded-md"
+                                                    className="h-fit w-24 px-2 py-3 m-2 bg-brand text-white rounded-md"
                                                     onClick={() => handleNodeCreate("wait")}>
                                                     <p className="text-sm">Save</p>
                                                 </button>
@@ -311,8 +321,8 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                                                 <CiMail className=" text-purple-800 text-xl font-semibold" />
                                             </div>
                                             <div className="w-2/3">
-                                                <p className="text-sm text-black font-semibold">Cold Email</p>
-                                                <p className="text-sm text-gray-500">Send a cold email</p>
+                                                <p className="text-sm text-black font-semibold">Outreach or Cold Email</p>
+                                                <p className="text-sm">Send an outreach or a email</p>
                                             </div>
                                         </div>
 
@@ -322,8 +332,8 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
                                                 <BsClock className=" text-lime-500 text-xl font-semibold" />
                                             </div>
                                             <div className="w-2/3">
-                                                <p className="text-sm text-black font-semibold">Wait/Delay</p>
-                                                <p className="text-sm text-gray-500">Add a delay between blocks</p>
+                                                <p className="text-sm text-black font-semibold">Wait or Delay</p>
+                                                <p className="text-sm">Add a delay between blocks</p>
                                             </div>
                                         </div>
                                     </div>

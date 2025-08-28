@@ -16,6 +16,17 @@ export const LeadProvider = ({ children }) => {
         },
     ]);
 
+    const resetLeads = () => {
+        setFileName("");
+        setSavedLeadLists([{
+            id: "sample-leads",
+            title: "Sample Leads", leads: [
+                { name: "John Doe", email: "john@example.com" },
+                { name: "Jane Smith", email: "jane@sample.com" },
+            ]
+        }]);
+    }
+
     return (
         <LeadContext.Provider value={{
             savedLeadLists,
@@ -24,6 +35,7 @@ export const LeadProvider = ({ children }) => {
             setFileName,
             selectedLeadTitle,
             setSelectedLeadTitle,
+            resetLeads
         }}>
             {children}
         </LeadContext.Provider>

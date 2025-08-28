@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import  { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     ReactFlow,
     MiniMap,
@@ -7,7 +7,7 @@ import {
     addEdge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { AddBlock, ColdEmail, LeadSource, LeadSourceModal, NewBlockModal, Wait } from '../index';
+import { AddBlock, ColdEmail, LeadSource, LeadSourceModal, NewBlockModal, Wait } from '../../components/index';
 import { useFlowContext } from '../../contexts/FlowContext';
 
 const Flow = () => {
@@ -19,7 +19,8 @@ const Flow = () => {
         flowData,
         updateFlow,
         handleEdgesChange,
-        handleNodesChange
+        handleNodesChange,
+        flowStarted
     } = useFlowContext();
 
     // comp states
@@ -27,7 +28,7 @@ const Flow = () => {
     const [blockModalOpen, setBlockModalOpen] = useState(false);
 
 
-    console.log(flowData.nodes);
+    // console.log(flowData.nodes);
 
     const nodeTypes = useMemo(() => ({
         addBlock: AddBlock,
@@ -46,10 +47,10 @@ const Flow = () => {
     // update lead source
     const updateLeadSource = (newData) => {
         updateFlow("leadSrcData", newData);
-        const updatedNodesArr = flowData.nodes.map((nd) => nd.id === 'lead-src' ? { ...nd, data: { ...nd.data, ...newData} } : nd);
-        console.log(updatedNodesArr);
+        const updatedNodesArr = flowData.nodes.map((nd) => nd.id === 'lead-src' ? { ...nd, data: { ...nd.data, ...newData } } : nd);
+        // console.log(updatedNodesArr);
         setNodes(updatedNodesArr);
-        updateFlow("nodes",updatedNodesArr);
+        updateFlow("nodes", updatedNodesArr);
         closeLeadModal();
     }
 
@@ -92,8 +93,19 @@ const Flow = () => {
         );
     }, [flowData.leadSrcData, setNodes]);
 
+
+    if (!flowStarted) {
+        return (
+            <div className="min-h-screen grid place-content-center">
+                <p className="text-md px-4 py-2 m-1 rounded-lg text-amber-900 text-center bg-amber-200">
+                    Click on Create Flow to start a new flow
+                </p>
+            </div>
+        )
+    }
+
     return (
-        <div className='relative' style={{ width: '100%', height: '100vh', overflowX: 'scroll' }}>
+        <div className='relative' style={{ width: '100%', height: '95vh', overflowX: 'scroll' }}>
             {
                 leadModalOpen && (
                     <LeadSourceModal

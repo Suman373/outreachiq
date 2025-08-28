@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import { useLeadContext } from "./LeadContext";
 import { nanoid } from "nanoid";
 import { postFlowData } from "../api/flow";
+import { useAuthContext } from "./AuthContext";
+import { useBlockContext } from "./BlockContext";
 
 const FlowContext = createContext();
 
@@ -23,6 +25,9 @@ export const FlowProvider = ({ children }) => {
     const [flowStarted, setFlowStarted] = useState(false);
     const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodeState);
     const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdgeState);
+    const {userObj} = useAuthContext();
+    const {resetBlock} = useBlockContext();
+    const {resetLeads} = useLeadContext();
 
     const [flowData, setFlowData] = useState({
         flowId: nanoid(),
@@ -54,6 +59,12 @@ export const FlowProvider = ({ children }) => {
 
 
     const addNewNode = (nodeType, data) => {
+        // free plan - 1 flow and 4 nodes (excl. lead & add)
+        // lead - 10 (max)
+        if(nodes-2 + userObj.usage.nodes >= userObj.quota.nodes){
+            toast.error("Your quota limit is reached.\nUpgrade your plan to add more nodes.");
+            return;
+        }
         const newNode = createNode(nodeType, 0, nodes[nodes.length - 1].position.y + 40, data);
         const updatedNodes = nodes.filter(n => n.id !== 'add-block').concat(newNode);
         const newEdge1 = createEdge(nodes[nodes.length - 2].id, newNode.id);
@@ -82,7 +93,7 @@ export const FlowProvider = ({ children }) => {
             updateFlow("loading", true);
             const leadListObj = savedLeadLists.find((lead) => lead.title === flowData?.leadSrcData?.title);
             const errorMessage = validateFlow({ flowData, leadListObj });
-            console.log(flowData,leadListObj?.leads);
+            // console.log(flowData,leadListObj?.leads);
             // console.log(errorMessage);
             if (errorMessage) {
                 throw new Error(errorMessage);
@@ -102,6 +113,10 @@ export const FlowProvider = ({ children }) => {
     }
 
     const resetFlow = () => {
+        resetBlock();
+        resetLeads();
+        setNodes(defaultNodeState);
+        setEdges(defaultEdgeState);
         setFlowData({
             flowId: nanoid(),
             name: "Flow",
@@ -113,8 +128,9 @@ export const FlowProvider = ({ children }) => {
     }
 
     const deleteFlow = async () => {
+        console.log(flowData);
         try {
-            if (!flowData?.id) {
+            if (!flowData?.flowId) {
                 toast.error("Flow id not valid");
                 return;
             }

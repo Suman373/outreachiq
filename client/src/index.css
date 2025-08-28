@@ -28,7 +28,7 @@ h1 {
 }
 
 .input-label {
-  @apply w-full text-sm text-gray-600;
+  @apply w-full text-sm text-neutral-100;
 }
 
 @layer components {

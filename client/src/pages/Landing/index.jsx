@@ -1,12 +1,14 @@
-import AnimatedButton from "../../components/shared/misc/AnimatedButton";
-import Navbar from "../../components/shared/Navbar";
 import { BsArrowRight, BsPlayFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import packageJson from '../../../package.json';
-import LogoTicker from "../../components/shared/misc/LogoTicker";
 import productImg from '../../assets/product-image.png';
-import Footer from "../../components/shared/misc/Footer";
-import ScrollToTop from "../../components/shared/misc/ScrollToTop";
+import { 
+    AnimatedButton, 
+    Footer, 
+    LogoTicker, 
+    Navbar, 
+    ScrollToTop
+} from "../../components";
 
 const whychooseus = [
     {

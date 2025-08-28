@@ -1,10 +1,16 @@
 import { Suspense, useEffect, useState } from "react";
-import { Auth, Home } from "./pages";
+import {
+  Auth,
+  Flow,
+  Home,
+  Landing,
+  Preloader,
+  SavedFlows,
+  Settings
+} from "./pages";
 import { BrowserRouter as BRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthContext } from "./contexts/AuthContext";
-import Landing from "./pages/Landing";
-import ResetScroll from "./components/shared/misc/ResetScroll";
-import Preloader from "./pages/Preloader";
+import { ResetScroll } from "./components";
 
 const App = () => {
   const { isLoggedIn, setIsLoggedIn, fetchAndSetUser } = useAuthContext();
@@ -12,7 +18,7 @@ const App = () => {
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem('outreachiq-user'));
     if (userId) {
-      fetchAndSetUser(userId).finally(()=>{ setIsLoggedIn(true)});
+      fetchAndSetUser(userId).finally(() => { setIsLoggedIn(true) });
     }
   }, [setIsLoggedIn]);
 
@@ -21,8 +27,13 @@ const App = () => {
       <Suspense fallback={<Preloader />}>
         <ResetScroll />
         <Routes>
-          <Route path="/" element={isLoggedIn ? <Home /> : <Landing />} />
+          <Route path="/" element={isLoggedIn ? <Home /> : <Landing />}>
+            <Route index element={<Flow />}></Route>
+            <Route path="saved-flows" element={<SavedFlows />}></Route>
+            <Route path="settings" element={<Settings />}></Route>
+          </Route>
           <Route path="/register" element={!isLoggedIn ? <Auth /> : <Navigate to="/" />}></Route>
+          <Route path="/verify" element={<><h1>Verify your email</h1></>}></Route>
           <Route path="*" element={<h1>Page not found</h1>}></Route>
         </Routes>
       </Suspense >

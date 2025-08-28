@@ -7,11 +7,11 @@ const Providers = ({ children }) => {
     return (
         <AuthProvider>
             <LeadProvider>
-                <FlowProvider>
-                    <BlockProvider>
+                <BlockProvider>
+                    <FlowProvider>
                         {children}
-                    </BlockProvider>
-                </FlowProvider>
+                    </FlowProvider>
+                </BlockProvider>
             </LeadProvider>
         </AuthProvider>
     )
