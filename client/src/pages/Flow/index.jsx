@@ -20,7 +20,8 @@ const Flow = () => {
         updateFlow,
         handleEdgesChange,
         handleNodesChange,
-        flowStarted
+        flowStarted,
+        deleteNode
     } = useFlowContext();
 
     // comp states
@@ -56,6 +57,7 @@ const Flow = () => {
 
     // any node click
     const onNodeClick = (event, node) => {
+        console.log(node);
         switch (node.type) {
             case 'addBlock':
                 if (node.id === "add-block") openBlockModal();
@@ -64,9 +66,17 @@ const Flow = () => {
                 openLeadModal();
                 break;
             default:
-                alert("node id", node?.id);
+                alert(`node id - ${node.id}`);
                 break;
         }
+    }
+
+    // right click node delete
+    const onNodeContextMenu = (event,node)=>{
+        event.preventDefault();
+        if(node.type === "lead" || node.type === "addBlock") return;
+        console.log(node);
+        deleteNode(node.id);
     }
 
     // while connecting nodes
@@ -129,6 +139,7 @@ const Flow = () => {
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChange}
                 onConnect={onConnect}
+                onNodeContextMenu={onNodeContextMenu}
                 onNodeClick={onNodeClick}
                 fitView
                 nodeTypes={nodeTypes}

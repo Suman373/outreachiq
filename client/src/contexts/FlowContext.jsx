@@ -25,9 +25,9 @@ export const FlowProvider = ({ children }) => {
     const [flowStarted, setFlowStarted] = useState(false);
     const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodeState);
     const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdgeState);
-    const {userObj} = useAuthContext();
-    const {resetBlock} = useBlockContext();
-    const {resetLeads} = useLeadContext();
+    const { userObj } = useAuthContext();
+    const { resetBlock } = useBlockContext();
+    const { resetLeads } = useLeadContext();
 
     const [flowData, setFlowData] = useState({
         flowId: nanoid(),
@@ -37,6 +37,8 @@ export const FlowProvider = ({ children }) => {
         edges: edges,
         leadSrcData: {},
     });
+
+    console.log(flowData);
 
     const updateFlow = (key, value, parentKey = null) => {
         setFlowData((prev) => {
@@ -57,11 +59,10 @@ export const FlowProvider = ({ children }) => {
         });
     };
 
-
     const addNewNode = (nodeType, data) => {
         // free plan - 1 flow and 4 nodes (excl. lead & add)
         // lead - 10 (max)
-        if(nodes-2 + userObj.usage.nodes >= userObj.quota.nodes){
+        if (flowData.nodes.length - 2 + userObj.usage.nodes >= userObj.quota.nodes) {
             toast.error("Your quota limit is reached.\nUpgrade your plan to add more nodes.");
             return;
         }
@@ -88,6 +89,31 @@ export const FlowProvider = ({ children }) => {
         updateFlow("edges", finalEdges);
     };
 
+    const deleteNode = (nodeId) => {
+        const updatedNodes = flowData.nodes.filter((node) => node.id !== nodeId);
+        const updatedEdges = [];
+        for (let i = 0; i < flowData.edges.length; i++) {
+            if (flowData.edges[i].target === nodeId) {
+                // outgoing edge to target node
+                updatedEdges.push({
+                    id: flowData.edges[i].id,
+                    source: flowData.edges[i].source,
+                    target: flowData.edges[i + 1].target,
+                });
+            } else if (flowData.edges[i].source === nodeId) {
+                continue;
+            }
+            else {
+                updatedEdges.push(flowData.edges[i]);
+            }
+        }
+        console.log(updatedEdges);
+        setNodes(updatedNodes);
+        setEdges(updatedEdges);
+        updateFlow("nodes", updatedNodes);
+        updateFlow("edges", updatedEdges);
+    }
+
     const scheduleFlow = async () => {
         try {
             updateFlow("loading", true);
@@ -99,8 +125,8 @@ export const FlowProvider = ({ children }) => {
                 throw new Error(errorMessage);
             }
             //schedule flow if no error
-            const response = await postFlowData(flowData,leadListObj.leads);
-            if(!response){
+            const response = await postFlowData(flowData, leadListObj.leads);
+            if (!response) {
                 throw new Error("Failed to schedule flow");
             }
             toast.success("Flow scheduled successfully");
@@ -181,7 +207,8 @@ export const FlowProvider = ({ children }) => {
             handleEdgesChange,
             flowStarted,
             setFlowStarted,
-            resetFlow
+            resetFlow,
+            deleteNode
         }}>
             {children}
         </FlowContext.Provider>

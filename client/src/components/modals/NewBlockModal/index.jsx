@@ -54,7 +54,6 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
         switch (nodeType) {
             case 'email':
                 // valid variables
-                console.log(emailBlock.variables);
                 const isValidVariables = Object.values(emailBlock?.variables).every(v => v.length > 0);
                 if (!isValidVariables) {
                     toast.error("Variable values are empty.\n Please enter values for variables.");
