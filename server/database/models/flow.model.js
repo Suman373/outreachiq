@@ -30,8 +30,11 @@ const FlowSchema = new mongoose.Schema({
     userId: { type: String, required: true },
     nodes: [NodeSubSchema],
     edges: [EdgeSubSchema],
+    totalJobs: { type: Number, default: 0 },
+    completedJobs: { type: Number, default: 0 },
+    failedJobs: { type: Number, default: 0 },
     scheduled: { type: Boolean, default: false },
-    status: { type: String, enum: ["draft", "scheduled", "failed", "completed"], default: "draft"},
+    status: { type: String, enum: ["draft", "scheduled", "failed", "partial", "completed"], default: "draft" },
     leads: [{
         name: { type: String, required: true },
         email: { type: String, required: true },

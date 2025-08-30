@@ -11,7 +11,7 @@ module.exports = async(app)=>{
     app.get('/',(req,res)=> res.status(200).send("Welcome to OutreachIQ Backend Web Server"));
 
     // api routes
-    app.use('/api/v1/auth',AuthRoute);
+    app.use('/api/v1/auth', AuthRoute);
     app.use('/api/v1/flows', FlowRoute);
     app.use('/api/v1/users', UserRoute);
 }

@@ -1,11 +1,18 @@
 import { nanoid } from "nanoid";
 
-const timeUnitsInSeconds = {
+const timeUnitsInSeconds = Object.freeze({
     "Minutes": 60,        // 1 minute = 60 seconds
     "Hours": 3600,        // 1 hour = 3600 seconds
     "Days": 86400,        // 1 day = 86400 seconds
     "Weeks": 604800       // 1 week = 604800 seconds
-};
+});
+
+export const flowStatus = Object.freeze({
+    "draft": "Draft",
+    "scheduled": "Scheduled",
+    "failed": "Failed",
+    "completed": "completed"
+});
 
 export const createNode = (nodeType, posX, posY, data) => {
     return {
@@ -54,7 +61,9 @@ export const validateFlow = (data)=>{
     const flowObj = data?.flowData;
     const leadList =  data.leadListObj?.leads;
     // console.log("Validation flowobj", flowObj);
+    if(!flowObj.userId) return "UserId is required";
     if(!flowObj.leadSrcData?.title || flowObj.leadSrcData?.title?.toLowerCase() === "sample leads") return "Sample Leads or empty leads are not allowed.";
+    if(flowObj.scheduled === true) return "Flow is already scheduled"
     if(!leadList || leadList.length < 1) return "Leads are empty or invalid"
     if(flowObj.nodes.length <= 2) return "No email or wait blocks found in the flow";
     if(flowObj.edges.length < 2) return "No sufficient edges found in the flow";

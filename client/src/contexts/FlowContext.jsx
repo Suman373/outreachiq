@@ -31,10 +31,13 @@ export const FlowProvider = ({ children }) => {
 
     const [flowData, setFlowData] = useState({
         flowId: nanoid(),
+        userId: userObj.id,
         name: "Flow",
         loading: false,
         nodes: nodes,
         edges: edges,
+        scheduled: false,
+        status: "draft",
         leadSrcData: {},
     });
 
@@ -66,6 +69,7 @@ export const FlowProvider = ({ children }) => {
             toast.error("Your quota limit is reached.\nUpgrade your plan to add more nodes.");
             return;
         }
+        if (flowData.scheduled === true) return;
         const newNode = createNode(nodeType, 0, nodes[nodes.length - 1].position.y + 40, data);
         const updatedNodes = nodes.filter(n => n.id !== 'add-block').concat(newNode);
         const newEdge1 = createEdge(nodes[nodes.length - 2].id, newNode.id);
@@ -90,6 +94,7 @@ export const FlowProvider = ({ children }) => {
     };
 
     const deleteNode = (nodeId) => {
+        if (flowData.scheduled === true) return;
         const updatedNodes = flowData.nodes.filter((node) => node.id !== nodeId);
         const updatedEdges = [];
         for (let i = 0; i < flowData.edges.length; i++) {
@@ -129,6 +134,9 @@ export const FlowProvider = ({ children }) => {
             if (!response) {
                 throw new Error("Failed to schedule flow");
             }
+            setFlowData({ ...flowData, scheduled: true, status: "scheduled" });
+            resetBlock();
+            resetLeads();
             toast.success("Flow scheduled successfully");
         } catch (error) {
             console.log("Error while scheduling flow", error);
@@ -149,6 +157,7 @@ export const FlowProvider = ({ children }) => {
             loading: false,
             nodes: defaultNodeState,
             edges: defaultEdgeState,
+            scheduled: false,
             leadSrcData: {},
         });
     }
@@ -177,6 +186,7 @@ export const FlowProvider = ({ children }) => {
 
     // custom change handler for syncing with flowData 
     const handleNodesChange = useCallback((changes) => {
+        if (flowData.scheduled === true) return;
         setNodes((nds) => {
             const updated = applyNodeChanges(changes, nds);
             updateFlow("nodes", updated);
@@ -185,6 +195,7 @@ export const FlowProvider = ({ children }) => {
     }, [updateFlow]);
 
     const handleEdgesChange = useCallback((changes) => {
+        if (flowData.scheduled === true) return;
         setEdges((eds) => {
             const updated = applyEdgeChanges(changes, eds);
             updateFlow("edges", updated);

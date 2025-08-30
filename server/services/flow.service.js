@@ -1,13 +1,56 @@
+const agenda = require('../config/agenda');
+const { agendaJobs } = require('../constants');
 const { FlowModel } = require('../database/models');
 const { ConvertToSeconds, Logger, LOG_LEVELS, LOG_PATHS } = require('../utils/');
 const { scheduleEmail } = require('./schedule.service');
 
+
+// agenda job success
+agenda.on(agendaJobs.SUCCESS_SEND_EMAIL, async (job) => {
+    const { flowId } = job.attrs.data;
+    const flow = await FlowModel.findOne({ flowId });
+    flow.completedJobs += 1;
+    // all jobs finished
+    if (flow.completedJobs + flow.failedJobs >= flow.totalJobs) {
+        if (flow.failedJobs > 0) {
+            flow.status = "partial";
+        } else {
+            flow.status = "completed";
+        }
+    }
+    await flow.save();
+});
+
+// agenda job fail
+agenda.on(agendaJobs.FAILURE_SEND_EMAIL, async (err, job) => {
+    const { flowId } = job.attrs.data;
+    const flow = await FlowModel.findOne({ flowId });
+    flow.failedJobs += 1;
+    // all jobs finished
+    if (flow.completedJobs + flow.failedJobs >= flow.totalJobs) {
+        if (flow.completedJobs > 0) {
+            flow.status = "partial";
+        } else {
+            flow.status = "failed";
+        }
+    }
+    await flow.save();
+});
+
+
 const processFlow = async (flowData, leads) => {
     try {
-        console.log(flowData);
         // save in db 
-        const dbRes = await FlowModel.create({...flowData,leads});
-        if(!dbRes){
+        let emailNodes = 0;
+        flowData.nodes.forEach((nd) => nd.type === "email" && emailNodes++);
+        const totalJobs = leads.length * emailNodes;
+        const newFlowObj = {
+            ...flowData,
+            totalJobs,
+
+        };
+        const dbRes = await FlowModel.create({ newFlowObj, leads });
+        if (!dbRes) {
             throw new Error("Failed to save flow in database");
         }
         const nodes = flowData.nodes;
@@ -51,7 +94,7 @@ const processFlow = async (flowData, leads) => {
                         node.id,
                         flowData.flowId
                     ).then(
-                        (res) => ({res, nodeId: node.id, email: email, flowId: flowData.flowId }),
+                        (res) => ({ res, nodeId: node.id, email: email, flowId: flowData.flowId }),
                     ));
                 }
             }
@@ -85,4 +128,30 @@ const processFlow = async (flowData, leads) => {
     }
 }
 
-module.exports = { processFlow };
+const deleteFlowAndJobs = async (flowId) => {
+    try {
+        const deletedFlow = await FlowModel.findOneAndDelete({ flowId });
+        if (!deletedFlow) {
+            throw new Error("Flow not found");
+        }
+        const { deletedCount } = await agenda.cancel({ "data.flowId": flowId });
+        Logger(LOG_LEVELS.INFO, LOG_PATHS.SERVICELOG, {
+            title: "DELETE FLOW AND JOBS SUCCESS",
+            message: `Flow ${flowId} deleted along with ${deletedCount} jobs`,
+            flowId,
+        });
+        return {
+            flowId,
+            jobsDeleted: deletedCount,
+        };
+    } catch (error) {
+        Logger(LOG_LEVELS.ERROR, LOG_PATHS.SERVICELOG, {
+            title: "DELETE FLOW AND JOBS FAILED",
+            message: error.message,
+            flowId: flowId
+        });
+        throw error;
+    }
+}
+
+module.exports = { processFlow, deleteFlowAndJobs };

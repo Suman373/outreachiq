@@ -1,16 +1,7 @@
-const Agenda = require('agenda');
+const agenda = require('../config/agenda');
 const constants = require('../constants/');
 const { Logger, LOG_LEVELS, LOG_PATHS } = require('../utils');
 const {sendEmail} = require("./email.service");
-
-const agenda = new Agenda({
-    db: {
-        address: process.env.MONGODB_URI,
-        collection: 'agendajobs'
-    }
-});
-
-// agenda jobs
 
 agenda.define(constants.agendaJobs.SEND_EMAIL, async (job) => {
     const { subject, body, address, name, nodeId, flowId } = job.attrs.data;
@@ -55,12 +46,6 @@ const scheduleEmail = async (time, subject, body, address, name, nodeId, flowId)
         throw new Error("Error in email scheduling");
     }
 }
-
-
-(async () => {
-    await agenda.start();
-    console.log("Agenda started");
-})();
 
 
 module.exports = { scheduleEmail };

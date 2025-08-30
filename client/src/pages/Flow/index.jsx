@@ -57,7 +57,8 @@ const Flow = () => {
 
     // any node click
     const onNodeClick = (event, node) => {
-        console.log(node);
+        // console.log(node);
+        if(flowData.scheduled) return;
         switch (node.type) {
             case 'addBlock':
                 if (node.id === "add-block") openBlockModal();
@@ -74,6 +75,7 @@ const Flow = () => {
     // right click node delete
     const onNodeContextMenu = (event,node)=>{
         event.preventDefault();
+        if(flowData.scheduled) return;
         if(node.type === "lead" || node.type === "addBlock") return;
         console.log(node);
         deleteNode(node.id);
@@ -87,6 +89,7 @@ const Flow = () => {
 
     // for updating lead-src node 
     useEffect(() => {
+        if(flowData.scheduled) return;
         setNodes((nds) =>
             nds.map((node) => {
                 if (node.id === 'lead-src') {
