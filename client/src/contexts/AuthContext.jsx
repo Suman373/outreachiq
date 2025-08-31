@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
             console.log(error.message);
             setUserObj({});
             setIsLoggedIn(false);
-            localStorage.removeItem('outreachiq-user');
+            // localStorage.removeItem('outreachiq-user');
         }
     }
 

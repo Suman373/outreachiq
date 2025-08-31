@@ -3,7 +3,7 @@ import { IoWarning } from "react-icons/io5";
 import { FaInfoCircle , FaLock} from "react-icons/fa";
 import { GrValidate } from "react-icons/gr";
 const TextBadge = ({ text, type, customStyle }) => {
-    let badgeStyle = "bg-neutral-400 text-black";
+    let badgeStyle = "bg-gray-300 text-black";
     let badgeIcon ;
     switch (type) {
         case 'warn':

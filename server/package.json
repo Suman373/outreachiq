@@ -1,6 +1,7 @@
 {
   "name": "outreachiq-server",
   "version": "1.7.3",
+  "private": true,
   "description": "Node.js Backend Web Server for OutreachIQ",
   "main": "index.js",
   "scripts": {

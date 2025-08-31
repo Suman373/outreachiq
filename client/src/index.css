@@ -67,6 +67,10 @@ h1 {
     @apply  grid place-content-center bg-white h-10 w-10 rounded-full p-1 cursor-pointer text-black;
   }
 
+  .table-td{
+    @apply px-4 py-2 border-b;
+  }
+
 }
 
 

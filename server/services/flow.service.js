@@ -154,4 +154,31 @@ const deleteFlowAndJobs = async (flowId) => {
     }
 }
 
-module.exports = { processFlow, deleteFlowAndJobs };
+
+const fetchAllFlows = async () => {
+    try {
+        const flows = await FlowModel.find({});
+        if (!flows) throw new Error("Flows not found");
+        return flows;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+const fetchFlowsByUser = async (userId) => {
+    try {
+        const flows = FlowModel.find({userId});
+        if(!flows) throw new Error("Flows not found by user");
+        return flows;
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = {
+    processFlow,
+    deleteFlowAndJobs,
+    fetchAllFlows,
+    fetchFlowsByUser
+};

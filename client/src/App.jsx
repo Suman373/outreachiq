@@ -16,10 +16,14 @@ const App = () => {
   const { isLoggedIn, setIsLoggedIn, fetchAndSetUser } = useAuthContext();
 
   useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem('outreachiq-user'));
-    if (userId) {
-      fetchAndSetUser(userId).finally(() => { setIsLoggedIn(true) });
-    }
+    (async () => {
+      const userId = JSON.parse(localStorage.getItem('outreachiq-user'));
+      if (userId) {
+        await fetchAndSetUser(userId).finally(() => setIsLoggedIn(true));
+      } else {
+        setIsLoggedIn(false);
+      }
+    })();
   }, [setIsLoggedIn]);
 
   return (
@@ -29,6 +33,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={isLoggedIn ? <Home /> : <Landing />}>
             <Route index element={<Flow />}></Route>
+            <Route path={`flow/:id`} element={null}></Route>
             <Route path="saved-flows" element={<SavedFlows />}></Route>
             <Route path="settings" element={<Settings />}></Route>
           </Route>
