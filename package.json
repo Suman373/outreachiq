@@ -1,9 +1,5 @@
 {
     "private": true,
-    "workspaces": [
-        "client",
-        "server"
-    ],
     "devDependencies": {
         "lerna": "^8.2.3"
     }
