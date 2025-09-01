@@ -1,5 +1,5 @@
 import { applyEdgeChanges, applyNodeChanges, useEdgesState, useNodesState } from "@xyflow/react";
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { createEdge, createNode, validateFlow } from "../utils";
 import toast from "react-hot-toast";
 import { useLeadContext } from "./LeadContext";
@@ -31,7 +31,7 @@ export const FlowProvider = ({ children }) => {
 
     const [flowData, setFlowData] = useState({
         flowId: nanoid(),
-        userId: userObj.id,
+        userId: null,
         name: "Flow",
         loading: false,
         nodes: nodes,
@@ -41,7 +41,7 @@ export const FlowProvider = ({ children }) => {
         leadSrcData: {},
     });
 
-    console.log(flowData);
+    console.log(userObj.id);
 
     const updateFlow = (key, value, parentKey = null) => {
         setFlowData((prev) => {
@@ -122,6 +122,7 @@ export const FlowProvider = ({ children }) => {
     const scheduleFlow = async () => {
         try {
             updateFlow("loading", true);
+            console.log("SCHEDULING", flowData);
             const leadListObj = savedLeadLists.find((lead) => lead.title === flowData?.leadSrcData?.title);
             const errorMessage = validateFlow({ flowData, leadListObj });
             // console.log(flowData,leadListObj?.leads);
@@ -154,6 +155,7 @@ export const FlowProvider = ({ children }) => {
         setFlowData({
             flowId: nanoid(),
             name: "Flow",
+            userId: userObj.id,
             loading: false,
             nodes: defaultNodeState,
             edges: defaultEdgeState,
@@ -202,6 +204,12 @@ export const FlowProvider = ({ children }) => {
             return updated;
         });
     }, [updateFlow]);
+
+    useEffect(() => {
+        if (userObj?.id) {
+            setFlowData(prev => ({ ...prev, userId: userObj.id }));
+        }
+    }, [userObj]);
 
     return (
         <FlowContext.Provider value={{

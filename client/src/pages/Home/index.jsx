@@ -5,7 +5,7 @@ const Home = () => {
 
     return (
         <>
-            <div className="min-h-screen grid grid-cols-12">
+            <div className="h-screen grid grid-cols-12 overflow-y-hidden">
                 <div className="col-span-2 bg-neutral-800 text-white p-4">
                     <LeftSidebar/>
                 </div>

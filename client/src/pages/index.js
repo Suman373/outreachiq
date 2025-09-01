@@ -5,3 +5,4 @@ export {default as Settings} from './Settings/index';
 export {default as Preloader} from './Preloader/index';
 export {default as Flow} from './Flow/index';
 export {default as SavedFlows} from './SavedFlows/'
+export {default as Analytics} from './Analytics/index';

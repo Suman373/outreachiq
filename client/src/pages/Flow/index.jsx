@@ -109,7 +109,7 @@ const Flow = () => {
 
     if (!flowStarted) {
         return (
-            <div className="min-h-screen grid place-content-center">
+            <div className="h-screen grid place-content-center">
                 <p className="text-md px-4 py-2 m-1 rounded-lg text-amber-900 text-center bg-amber-200">
                     Click on Create Flow to start a new flow
                 </p>

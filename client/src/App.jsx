@@ -1,5 +1,6 @@
 import { Suspense, useEffect } from "react";
 import {
+  Analytics,
   Auth,
   Flow,
   Home,
@@ -33,8 +34,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={isLoggedIn ? <Home /> : <Landing />}>
             <Route index element={<Flow />}></Route>
-            <Route path={`flow/:id`} element={null}></Route>
             <Route path="saved-flows" element={<SavedFlows />}></Route>
+            <Route path={`flow/:id`} element={null}></Route>
+            <Route path="analytics" element={<Analytics/>}></Route>
             <Route path="settings" element={<Settings />}></Route>
           </Route>
           <Route path="/register" element={!isLoggedIn ? <Auth /> : <Navigate to="/" />}></Route>

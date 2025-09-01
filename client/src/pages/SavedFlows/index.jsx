@@ -56,6 +56,19 @@ const SavedFlows = () => {
     const [savedFlows, setSavedFlows] = useState([]);
     const { userObj } = useAuthContext();
 
+    const [chartOptions, setChartOptions] = useState({
+        data: [
+            { month: 'Jan', avgTemp: 2.3, iceCreamSales: 162000 },
+            { month: 'Mar', avgTemp: 6.3, iceCreamSales: 302000 },
+            { month: 'May', avgTemp: 16.2, iceCreamSales: 800000 },
+            { month: 'Jul', avgTemp: 22.8, iceCreamSales: 1254000 },
+            { month: 'Sep', avgTemp: 14.5, iceCreamSales: 950000 },
+            { month: 'Nov', avgTemp: 8.9, iceCreamSales: 200000 },
+        ],
+        series: [{ type: 'bar', xKey: 'month', yKey: 'iceCreamSales' }],
+    });
+    console.log(savedFlows);
+
     const heads = [
         "Flow name",
         "Total Jobs",
@@ -68,7 +81,7 @@ const SavedFlows = () => {
     const fetchFlowsByUser = async (userId) => {
         try {
             const flows = await getFlowsByUser(userId);
-            setSavedFlows(flows);
+            setSavedFlows(flows.result);
         } catch (error) {
             console.log(error);
             toast.error("Failed to load flows");
@@ -84,9 +97,9 @@ const SavedFlows = () => {
             <div className="h-fit flex items-center justify-start gap-2">
                 <FaArrowLeft onClick={() => navigate("/")} />
                 <h1 className="text-lg md:text-xl font-semibold">Saved Sequences </h1>
-                <TextBadge text={flows.length} type={""} />
+                <TextBadge text={savedFlows.length} type={""} />
             </div>
-            {flows.length > 0 ? (
+            {savedFlows.length > 0 ? (
                 <table className="w-full border-collapse my-8 overflow-x-scroll">
                     <thead>
                         <tr>
@@ -101,7 +114,7 @@ const SavedFlows = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {flows.map((flow) => (
+                        {savedFlows.map((flow) => (
                             <tr key={flow.id} className="hover:bg-gray-50">
                                 <td className="table-td">{flow.name}</td>
                                 <td className="px-4 py-2 border-b">{flow.totalJobs}</td>
@@ -129,7 +142,7 @@ const SavedFlows = () => {
                     </tbody>
                 </table>
             )
-            // flows  not available
+                // flows  not available
                 :
                 <div className="h-[500px] grid place-content-center text-center">
                     <h2 className="text-brand text-lg md:text-2xl">Sorry 🥹 No flows available to show</h2>
