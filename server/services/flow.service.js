@@ -49,7 +49,7 @@ const processFlow = async (flowData, leads) => {
             totalJobs,
 
         };
-        const dbRes = await FlowModel.create({ newFlowObj, leads });
+        const dbRes = await FlowModel.create({ ...newFlowObj, ...leads });
         if (!dbRes) {
             throw new Error("Failed to save flow in database");
         }
@@ -125,6 +125,7 @@ const processFlow = async (flowData, leads) => {
             flowId: flowData?.id
         });
         console.log(`Error in service : processFlow - ${error}`);
+        throw error;
     }
 }
 
