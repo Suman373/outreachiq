@@ -5,6 +5,7 @@ import {
   Flow,
   Home,
   Landing,
+  Logs,
   Preloader,
   SavedFlows,
   Settings
@@ -37,6 +38,7 @@ const App = () => {
             <Route path="saved-flows" element={<SavedFlows />}></Route>
             <Route path={`flow/:id`} element={null}></Route>
             <Route path="analytics" element={<Analytics/>}></Route>
+            <Route path="logs" element={<Logs/>}></Route>
             <Route path="settings" element={<Settings />}></Route>
           </Route>
           <Route path="/register" element={!isLoggedIn ? <Auth /> : <Navigate to="/" />}></Route>

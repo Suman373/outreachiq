@@ -14,6 +14,19 @@ export const flowStatus = Object.freeze({
     "completed": "completed"
 });
 
+export const monthsArr = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+
+export const quickStatsEnum = Object.freeze({
+    totalFlows: "Total Flows",
+    totalJobs: "Total Jobs",
+    completedJobs: "Completed Jobs",
+    failedJobs: "Failed Jobs",
+    jobSuccessRatio: "Job Success Ratio"
+});
+
+
+
 export const createNode = (nodeType, posX, posY, data) => {
     return {
         id: nanoid(),
@@ -81,3 +94,28 @@ export const validatePassword = (password) => {
     /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
   return regex.test(password);
 };
+
+export const getAxes = (xLabel, xType, yLabel, yType) => {
+    return [
+        {
+            type: `${xType}`,
+            position: 'bottom',
+            title: { text: `${xLabel}` },
+        },
+        {
+            type: `${yType}`,
+            position: 'left',
+            title: { text: `${yLabel}` },
+        },
+    ];
+}
+
+export const getUserYears = (createdAt)=>{
+    const firstYear = new Date(createdAt).getFullYear();
+    const currYear = new Date().getFullYear();
+    const userYears = Array.from(
+    { length: currYear - firstYear + 1 },
+    (_, i) => firstYear + i);
+    if(!userYears) return [];
+    return userYears;
+}

@@ -62,11 +62,13 @@ const LeftSidebar = () => {
                 text={"Saved Flows"} />
                 <ListItem 
                 icon={<SiGoogleanalytics />} 
-                onClick={()=> handleNavigate("analytics")} paywall={false} 
+                paywall={true} 
+                onClick={()=> handleNavigate("analytics")}
                 text={"Analytics"} />
                 <ListItem 
                 icon={<LuLogs />} 
                 paywall={true} 
+                onClick={()=>  handleNavigate("logs")}
                 text={"Logs"} />
                 <ListItem 
                 icon={<IoIosSettings />} 
@@ -83,14 +85,15 @@ const LeftSidebar = () => {
 
 const ListItem = ({ icon, text, onClick, paywall = false }) => {
     // use userobj to determine their plan and available features
-    const eligible = !paywall; // also depends on paywall, if paywall false, user will be eligible for feature regardless of their plan
+    // const eligible = !paywall; // also depends on paywall, if paywall false, user will be eligible for feature regardless of their plan
+    const eligible = true;
     return (
         <li
             className="py-2 relative text-md text-white rounded-md inline-flex gap-4 items-center justify-start px-3 bg-brand/60 hover:opacity-65 cursor-pointer"
             onClick={!eligible ? null : onClick}>
             {icon ? React.cloneElement(icon, { className: "text-base" }) : ""}
             {text || "ListItem"}
-            {!eligible ? <TextBadge text={"Pro"} type={"paywall"} customStyle={{ position: 'absolute', right: "0.5rem", top: '0.5rem' }} /> : ""}
+            {paywall ? <TextBadge text={"Pro"} type={"paywall"} customStyle={{ position: 'absolute', right: "0.5rem", top: '0.5rem' }} /> : ""}
         </li>
     )
 }

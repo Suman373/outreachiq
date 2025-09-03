@@ -17,7 +17,8 @@ export default {
         vintagePeach: "#F8C8DC",// soft pastel peach
         abyssBlue: "#0A2463",   // deep ocean blue
         brand: "#691e87",
-        brandLight: "#b372cc"
+        brandLight: "#b372cc",
+        brandLighter: "#f8ebfc",
       },
     },
   },
