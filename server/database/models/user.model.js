@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {nanoid} = require('nanoid');
+const {nanoid} = require('nanoid/non-secure');
 
 const UserSchema = new mongoose.Schema({
     id: { type: String, required: true, unique: true, default: ()=> nanoid(14)},

@@ -28,7 +28,7 @@ const fetchAnalyticsSummary = async (userId, year) => {
                 {
                     $project: {
                         _id: 0,
-                        month: { $dateToString: { format: "%b-%Y", date: "$_id" } },
+                        month: { $dateToString: { format: "%b", date: "$_id" } },
                         count: 1
                     }
                 }
@@ -55,7 +55,7 @@ const fetchAnalyticsSummary = async (userId, year) => {
                 {
                     $project: {
                         _id: 0,
-                        month: { $dateToString: { format: "%b-%Y", date: "$_id" } },
+                        month: { $dateToString: { format: "%b", date: "$_id" } },
                         count: 1
                     }
                 }
@@ -124,7 +124,7 @@ const fetchQuickStats = async (userId, year) => {
         return {
             userId,
             year,
-            quickStats
+            quickStats:quickStats[0]
         }
     } catch (error) {
         console.log(error);

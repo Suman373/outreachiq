@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "test": "jest"
+    "test": "jest",
+    "redis-start": "docker run -d --name outreachiq-redis -p 6379:6379 redis:alpine",
+    "redis-stop": "docker stop outreachiq-redis && docker rm outreachiq-redis"
   },
   "nodemonConfig": {
     "ignore": [
@@ -23,6 +25,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "ioredis": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.3",
     "nanoid": "^5.1.5",
