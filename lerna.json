@@ -3,5 +3,10 @@
     "client",
     "server"
   ],
-  "version": "independent"
+  "version": "independent",
+  "command": {
+    "version": {
+      "message": "version bump %s"
+    }
+  }
 }
