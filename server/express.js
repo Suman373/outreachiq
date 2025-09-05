@@ -4,7 +4,8 @@ const {
     FlowRoute,
     AuthRoute,
     UserRoute, 
-    AnalyticsRoute 
+    AnalyticsRoute, 
+    SettingsRoute
 } = require('./routes/index');
 
 module.exports = async(app)=>{
@@ -20,4 +21,5 @@ module.exports = async(app)=>{
     app.use('/api/v1/users', UserRoute);
     app.use('/api/v1/flows', FlowRoute);
     app.use('/api/v1/analytics', AnalyticsRoute);
+    app.use('/api/v1/settings', SettingsRoute);
 }
