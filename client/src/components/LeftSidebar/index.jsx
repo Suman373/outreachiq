@@ -69,7 +69,7 @@ const LeftSidebar = () => {
                 icon={<LuLogs />} 
                 paywall={true} 
                 onClick={()=>  handleNavigate("logs")}
-                text={"Logs"} />
+                text={"FlowLogs"} />
                 <ListItem 
                 icon={<IoIosSettings />} 
                 onClick={() => handleNavigate("settings")} 

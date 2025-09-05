@@ -109,8 +109,8 @@ const Landing = () => {
                             <AnimatedButton
                                 primary="#691e87"
                                 secondary="#000000"
-                                textBeforeColor="#fff"
-                                textAfterColor="#fff"
+                                textBeforeColor={"#fff"}
+                                textAfterColor={"#fff"}
                                 text={"Request a demo"}
                                 icon={<BsArrowRight className="mt-1" />}
                             />
@@ -118,8 +118,8 @@ const Landing = () => {
                                 style={{ border: '1px solid black' }}
                                 primary="white"
                                 secondary="transparent"
-                                textBeforeColor="#000"
-                                textAfterColor="#000"
+                                textBeforeColor={"#000"}
+                                textAfterColor={"#000"}
                                 text={"Watch a video"}
                                 icon={<BsPlayFill className="mt-1 text-2xl" />}
                             />
