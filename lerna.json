@@ -6,7 +6,7 @@
   "version": "independent",
   "command": {
     "version": {
-      "message": "version bump %s"
+      "message": "chore(release): publish"
     }
   }
 }
