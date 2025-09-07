@@ -14,3 +14,4 @@ export {default as ScrollToTop} from './shared/misc/ScrollToTop';
 export {default as ResetScroll} from './shared/misc/ResetScroll';
 export {default as TextBadge} from './shared/misc/TextBadge';
 export {default as Chart} from './Chart/index';
+export {default as ViewLeadsModal} from './modals/ViewLeadsModal/index';

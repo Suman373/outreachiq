@@ -11,7 +11,16 @@ export const getUserSettings = async (userId) => {
 
 export const patchUserSettings = async (userId, payload) => {
     try {
-        const data = await AXIOS_PATCH(`/settings/${userId}`, { payload });
+        const data = await AXIOS_PATCH(`/settings/${userId}`, { ...payload });
+        return data?.data;
+    } catch (error) {
+        throw error?.response?.data || error;
+    }
+}
+
+export const patchDefaultSettings = async (userId) => {
+    try {
+        const data = await AXIOS_PATCH(`/settings/reset/${userId}`);
         return data?.data;
     } catch (error) {
         throw error?.response?.data || error;

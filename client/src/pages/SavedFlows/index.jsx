@@ -6,6 +6,7 @@ import { TextBadge } from "../../components";
 import { MdDelete, MdRemoveRedEye } from "react-icons/md";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { flowStatus } from "../../utils";
 
 const flows = [
     {
@@ -56,17 +57,6 @@ const SavedFlows = () => {
     const [savedFlows, setSavedFlows] = useState([]);
     const { userObj } = useAuthContext();
 
-    const [chartOptions, setChartOptions] = useState({
-        data: [
-            { month: 'Jan', avgTemp: 2.3, iceCreamSales: 162000 },
-            { month: 'Mar', avgTemp: 6.3, iceCreamSales: 302000 },
-            { month: 'May', avgTemp: 16.2, iceCreamSales: 800000 },
-            { month: 'Jul', avgTemp: 22.8, iceCreamSales: 1254000 },
-            { month: 'Sep', avgTemp: 14.5, iceCreamSales: 950000 },
-            { month: 'Nov', avgTemp: 8.9, iceCreamSales: 200000 },
-        ],
-        series: [{ type: 'bar', xKey: 'month', yKey: 'iceCreamSales' }],
-    });
     console.log(savedFlows);
 
     const heads = [
@@ -88,6 +78,10 @@ const SavedFlows = () => {
         }
     }
 
+    const handleViewFlow = (id) => {
+        navigate(`/flow/${id}`);
+    }
+
     useEffect(() => {
         fetchFlowsByUser(userObj.id);
     }, []);
@@ -106,7 +100,7 @@ const SavedFlows = () => {
                             {heads.map((heading, index) => (
                                 <th
                                     key={index}
-                                    className="px-4 py-2 text-left border-b font-semibold text-brand"
+                                    className="px-4 py-2 text-left border-b font-normal text-neutral-600"
                                 >
                                     {heading}
                                 </th>
@@ -115,26 +109,27 @@ const SavedFlows = () => {
                     </thead>
                     <tbody>
                         {savedFlows.map((flow) => (
-                            <tr key={flow.id} className="hover:bg-gray-50">
+                            <tr key={flow.id} className="hover:bg-gray-50 text-brand/80 font-semibold">
                                 <td className="table-td">{flow.name}</td>
                                 <td className="px-4 py-2 border-b">{flow.totalJobs}</td>
                                 <td className="px-4 py-2 border-b">{flow.completedJobs}</td>
                                 <td className="px-4 py-2 border-b">{flow.failedJobs}</td>
                                 <td
-                                    className={`table-td font-medium 
+                                    className={`table-td 
             ${flow.status === "completed" ? "text-green-600" :
                                             flow.status === "failed" ? "text-red-600" : flow.status === "scheduled" ? "text-blue-500" :
-                                                "text-yellow-600"}`}
-                                >
-                                    {flow.status}
+                                                "text-yellow-600"}`}>
+                                    {flowStatus[flow.status || "draft"]}
                                 </td>
 
-                                <td className="px-4 py-2 border-b">
-                                    <button className="text-blue-400 hover:underline mr-2">
-                                        <MdRemoveRedEye />
+                                <td className="px-4 py-2 border-b flex items-center gap-3">
+                                    <button
+                                        onClick={() => handleViewFlow(flow.flowId)}
+                                        className="text-sm shadow-sm shadow-brandLighter p-1 bg-brandLighter rounded-md ">
+                                        View
                                     </button>
-                                    <button className="text-red-400 hover:underline">
-                                        <MdDelete />
+                                    <button className="text-sm shadow-sm shadow-brandLighter p-1 bg-brandLighter rounded-md ">
+                                        Delete
                                     </button>
                                 </td>
                             </tr>

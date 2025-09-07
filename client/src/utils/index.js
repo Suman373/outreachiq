@@ -11,10 +11,20 @@ export const flowStatus = Object.freeze({
     "draft": "Draft",
     "scheduled": "Scheduled",
     "failed": "Failed",
-    "completed": "completed"
+    "completed": "Completed"
 });
 
-export const monthsArr = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+export const appLanguages = [
+    { name: "🇺🇸 English", value: "en" },
+    { name: "🇪🇸 Spanish", value: "es" },
+    { name: "🇫🇷 French", value: "fr" },
+    { name: "🇩🇪 German", value: "de" },
+    { name: "🇮🇳 Hindi", value: "hi" },
+    { name: "🇨🇳 Mandarin Chinese", value: "zh" },
+    { name: "🇸🇦 Arabic", value: "ar" },
+]
+
+export const monthsArr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 
 export const quickStatsEnum = Object.freeze({
@@ -58,7 +68,7 @@ export const extractVariablesMap = (textList) => {
         v.replace(/{{\s*|\s*}}/g, '').trim()
     ))]; // get word inside {{}}
 
-    const eligibleKeys = cleanKeys.filter(key=> key.toLowerCase() === "name" || key.toLowerCase() === "email" ? null : key).filter(Boolean);
+    const eligibleKeys = cleanKeys.filter(key => key.toLowerCase() === "name" || key.toLowerCase() === "email" ? null : key).filter(Boolean);
 
     const variablesObj = {};
 
@@ -70,29 +80,29 @@ export const extractVariablesMap = (textList) => {
 };
 
 
-export const validateFlow = (data)=>{
+export const validateFlow = (data) => {
     const flowObj = data?.flowData;
-    const leadList =  data.leadListObj?.leads;
+    const leadList = data.leadListObj?.leads;
     // console.log("Validation flowobj", flowObj);
-    if(!flowObj.userId) return "UserId is required";
-    if(!flowObj.leadSrcData?.title || flowObj.leadSrcData?.title?.toLowerCase() === "sample leads") return "Sample Leads or empty leads are not allowed.";
-    if(flowObj.scheduled === true) return "Flow is already scheduled"
-    if(!leadList || leadList.length < 1) return "Leads are empty or invalid"
-    if(flowObj.nodes.length <= 2) return "No email or wait blocks found in the flow";
-    if(flowObj.edges.length < 2) return "No sufficient edges found in the flow";
+    if (!flowObj.userId) return "UserId is required";
+    if (!flowObj.leadSrcData?.title || flowObj.leadSrcData?.title?.toLowerCase() === "sample leads") return "Sample Leads or empty leads are not allowed.";
+    if (flowObj.scheduled === true) return "Flow is already scheduled"
+    if (!leadList || leadList.length < 1) return "Leads are empty or invalid"
+    if (flowObj.nodes.length <= 2) return "No email or wait blocks found in the flow";
+    if (flowObj.edges.length < 2) return "No sufficient edges found in the flow";
 
     return null;
 }
 
-export const validateEmail = (email)=>{
+export const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
 
 export const validatePassword = (password) => {
-  const regex =
-    /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
-  return regex.test(password);
+    const regex =
+        /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    return regex.test(password);
 };
 
 export const getAxes = (xLabel, xType, yLabel, yType) => {
@@ -110,12 +120,12 @@ export const getAxes = (xLabel, xType, yLabel, yType) => {
     ];
 }
 
-export const getUserYears = (createdAt)=>{
+export const getUserYears = (createdAt) => {
     const firstYear = new Date(createdAt).getFullYear();
     const currYear = new Date().getFullYear();
     const userYears = Array.from(
-    { length: currYear - firstYear + 1 },
-    (_, i) => firstYear + i);
-    if(!userYears) return [];
+        { length: currYear - firstYear + 1 },
+        (_, i) => firstYear + i);
+    if (!userYears) return [];
     return userYears;
 }

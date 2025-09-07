@@ -27,5 +27,14 @@ export const getFlowsByUser = async (userId) => {
     }
 }
 
+export const getFlowById = async(flowId)=>{
+    try {
+        const data = await AXIOS_GET(`/flows/${flowId}`);
+        return data?.data;
+    } catch (error) {
+        throw error.response?.data || error;
+    }
+}
+
 
 

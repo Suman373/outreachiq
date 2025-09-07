@@ -8,7 +8,8 @@ import gpay from '../../assets/payment/gpay.png';
 import mastercard from '../../assets/payment/mastercard.png';
 import visa from '../../assets/payment/visa.png';
 import toast from "react-hot-toast";
-import { getUserSettings, patchUserSettings } from "../../api/settings";
+import { getUserSettings, patchDefaultSettings, patchUserSettings } from "../../api/settings";
+import { appLanguages } from "../../utils";
 
 const paymentMethods = [
     {
@@ -28,12 +29,7 @@ const paymentMethods = [
     }
 ];
 
-const appLanguages = [
-    {
-        name: "English",
-        value: "en"
-    },
-]
+
 
 const Settings = () => {
     const navigate = useNavigate();
@@ -44,22 +40,35 @@ const Settings = () => {
         emailNotifications: false,
         emailProvider: {
             enabled: false,
-            provider: "nodemailer",
+            config: {
+                port: 465,
+                host: "",
+                email: "",
+                secure: true,
+                appPass: ""
+            },
         },
         webhooksEnabled: false,
         webhooks: [],
         paymentMethods: [],
-        twoFactorAuth: false,
+        twoFactorAuth: {
+            enabled: false,
+            config: {}
+        },
     });
+
+    // console.log(settingsState);
 
     const invalidSettings = ["emailProvider", "webhooksEnabled", "webhooks", "paymentMethods"];
 
     const handleUpdateSettings = (key, value) => {
         if (invalidSettings.includes(key)) {
-            toast.error("Settings not available in free plan");
-            return;
+            return toast.error("Settings not available in free plan");
         }
-        console.log(`Changing ${key}-> ${value}`);
+        if (key === "language" && value !== "en") {
+            return toast.error("We don't support other languages yet");
+        }
+        // console.log(`Changing ${key}-> ${value}`);
         setSettingsState(prev => (
             {
                 ...prev,
@@ -70,7 +79,6 @@ const Settings = () => {
     };
 
     const handlePaymentChange = (method) => {
-        console.log(settingsState.paymentMethods);
         if (settingsState.paymentMethods.includes(method.value)) {
             handleUpdateSettings("paymentMethods", settingsState.paymentMethods.filter(it => it !== method.value));
         } else {
@@ -78,30 +86,45 @@ const Settings = () => {
         }
     }
 
-    const fetchUserSettings = async(userId)=>{
+    const fetchUserSettings = async (userId) => {
         try {
             const data = await getUserSettings(userId);
-            console.log(data);
+            // console.log(data);
             setSettingsState(data.result);
-        } catch (error) {   
+        } catch (error) {
             console.log(error);
             toast.error("Failed to fetch settings.\nTry again later");
         }
     }
 
-    const updateUserSettings = async(userId)=>{
+    const updateUserSettings = async () => {
         try {
-            const data = await patchUserSettings(userId, settingsState);
+            const data = await patchUserSettings(userObj.id, settingsState);
+            // console.log(data);
+            setSettingsState(data.result);
+            toast.success("Settings updated successfully");
         } catch (error) {
             console.log(error);
             toast.error("Failed to update settings.\nTry again later");
         }
     }
 
-    useEffect(()=>{
-        if(!userObj.id || userObj.id === "")return;
+    const resetUserSettings = async() =>{
+        try {
+            const data = await patchDefaultSettings(userObj.id);
+            console.log(data);
+            setSettingsState(data.result);
+            toast.success("Settings has been reset successfully");
+        } catch (error) {
+            console.log(error);
+            toast.error("Failed to reset settings.\nTry again later");
+        }
+    }
+
+    useEffect(() => {
+        if (!userObj.id || userObj.id === "") return;
         fetchUserSettings(userObj.id);
-    },[]);
+    }, []);
 
     return (
         <section className="">
@@ -113,9 +136,17 @@ const Settings = () => {
                 <h2 className="text-base md:text-lg font-medium text-brand my-4 px-3">App Preferences</h2>
                 <div className="settings-div">
                     <p className="text-base text-neutral-800 font-medium">Language</p>
-                    <select className="bg-brandLighter p-2 rounded-md">
+                    <select
+                        value={settingsState.language}
+                        onChange={(e) => handleUpdateSettings("language", e.target.value)}
+                        className="bg-brandLighter p-2 rounded-md">
                         {appLanguages.map((item, i) => (
-                            <option key={i} value={item.value}>{item.name}</option>
+                            <option
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                }}
+                                key={i}
+                                value={item.value}>{item.name}</option>
                         ))}
                     </select>
                 </div>
@@ -135,9 +166,9 @@ const Settings = () => {
                     <p className="text-base text-neutral-800 font-medium">Email Providers</p>
                     <span className="text-3xl text-brand">
                         {settingsState.emailProvider.enabled ?
-                            <FaToggleOn onClick={() => handleUpdateSettings("emailProvider", {...settingsState.emailProvider, enabled:false})} />
+                            <FaToggleOn onClick={() => handleUpdateSettings("emailProvider", { ...settingsState.emailProvider, enabled: false })} />
                             :
-                            <FaToggleOff onClick={() => handleUpdateSettings("emailProvider", {...settingsState.emailProvider, enabled: true})} />}
+                            <FaToggleOff onClick={() => handleUpdateSettings("emailProvider", { ...settingsState.emailProvider, enabled: true })} />}
                     </span>
                 </div>
                 <div className="settings-div">
@@ -187,20 +218,26 @@ const Settings = () => {
                 <div className="settings-div">
                     <p className="text-base text-neutral-800 font-medium">Two Factor Authentication (2FA)</p>
                     <span className="text-3xl text-brand">
-                        {settingsState.twoFactorAuth ?
-                            <FaToggleOn onClick={() => handleUpdateSettings("twoFactorAuth", false)} />
+                        {settingsState.twoFactorAuth.enabled ?
+                            <FaToggleOn onClick={() => handleUpdateSettings("twoFactorAuth", { ...settingsState.twoFactorAuth, enabled: false })} />
                             :
-                            <FaToggleOff onClick={() => handleUpdateSettings("twoFactorAuth", true)} />}
+                            <FaToggleOff onClick={() => handleUpdateSettings("twoFactorAuth", { ...settingsState.twoFactorAuth, enabled: true })} />}
                     </span>
                 </div>
             </div>
-            <div className="flex justify-end items-center">
+            <div className="flex justify-end items-center gap-3">
+                <button
+                    onClick={resetUserSettings}
+                    className={`h-10 px-3 py-1 bg-transparent text-brand border border-brand text-sm rounded-md my-3`}>
+                    Reset to Default
+                </button>
                 <button
                     onClick={updateUserSettings}
                     disabled={!isDirty}
                     className={`h-10 px-3 py-1 ${isDirty ? " bg-brand" : "bg-neutral-500"} text-white text-sm rounded-md my-3`}>
                     Save Changes
                 </button>
+
             </div>
         </section>
     )

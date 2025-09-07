@@ -7,3 +7,4 @@ export {default as Flow} from './Flow/index';
 export {default as SavedFlows} from './SavedFlows/'
 export {default as Analytics} from './Analytics/index';
 export {default as FlowLogs} from './FlowLogs/index';
+export {default as FlowDetails} from './FlowDetails/index';
