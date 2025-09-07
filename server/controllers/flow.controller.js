@@ -27,7 +27,7 @@ const scheduleFlow = async (req, res) => {
 const getAllFlows = async (req, res) => {
     try {
         const flows = await FLOW_SERVICE.fetchAllFlows();
-        return res.status(200).json({message:"Fetched all flows successfully", result: flows});
+        return res.status(200).json({ message: "Fetched all flows successfully", result: flows });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });
@@ -35,10 +35,21 @@ const getAllFlows = async (req, res) => {
 }
 
 const getFlowsByUser = async (req, res) => {
-    const { id:userId } = req.params;
+    const { id: userId } = req.params;
     try {
         const flows = await FLOW_SERVICE.fetchFlowsByUser(userId);
         res.status(200).json({ message: "Fetched flows by user successfully", result: flows });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const getFlowById = async (req, res) => {
+    const { id: flowId } = req.params;
+    try {
+        const flow = await FLOW_SERVICE.fetchFlowById(flowId);
+        res.status(200).json({ message: "Fetched flow data successfully", result: flow })
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });
@@ -49,4 +60,5 @@ module.exports = {
     scheduleFlow,
     getAllFlows,
     getFlowsByUser,
+    getFlowById
 }

@@ -66,8 +66,8 @@ const resetSettings = async (req, res) => {
             emailProvider: {
                 enabled: false,
                 config: {
-                    port: "",
-                    host: 465,
+                    port: 465,
+                    host: "",
                     email: "",
                     secure: true,
                     appPass: "",

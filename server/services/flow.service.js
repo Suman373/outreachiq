@@ -49,7 +49,7 @@ const processFlow = async (flowData, leads) => {
             totalJobs,
 
         };
-        const dbRes = await FlowModel.create({ ...newFlowObj, ...leads });
+        const dbRes = await FlowModel.create({ ...newFlowObj, leads });
         if (!dbRes) {
             throw new Error("Failed to save flow in database");
         }
@@ -177,9 +177,21 @@ const fetchFlowsByUser = async (userId) => {
     }
 }
 
+
+const fetchFlowById = async (flowId) => {
+    try {
+        const flow = FlowModel.findOne({flowId});
+        if(!flow) throw new Error("Flow not found by flowId");
+        return flow;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     processFlow,
     deleteFlowAndJobs,
     fetchAllFlows,
-    fetchFlowsByUser
+    fetchFlowsByUser,
+    fetchFlowById
 };
