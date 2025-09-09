@@ -139,6 +139,7 @@ const Auth = () => {
                                             required
                                             className="w-full mt-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:brand"
                                         />
+                                        <a href='/reset-password' className='text-brand underline my-2'>Forgot Password?</a>
                                     </div>
                                     <button
                                         type="submit"
@@ -147,7 +148,7 @@ const Auth = () => {
                                         Sign in
                                     </button>
                                 </form>
-                                <p className='text-md mx-1 my-2 '>Don't have an account? <span className='text-blue-600 cursor-pointer font-semibold' onClick={() => setShowLogin(false)}>Sign up</span></p>
+                                <p className='text-md mx-1 my-2 '>Don't have an account? <span className='text-brand cursor-pointer font-semibold' onClick={() => setShowLogin(false)}>Sign up</span></p>
                             </>
                             :
                             <>
@@ -212,7 +213,7 @@ const Auth = () => {
                                         Sign Up
                                     </button>
                                 </form>
-                                <p className='text-md mx-1 my-2 '>Already have an account? <span className='text-blue-600 cursor-pointer font-semibold' onClick={() => setShowLogin(true)}>Sign in</span></p>
+                                <p className='text-md mx-1 my-2 '>Already have an account? <span className='text-brand cursor-pointer font-semibold' onClick={() => setShowLogin(true)}>Sign in</span></p>
                             </>
                     }
                 </div>

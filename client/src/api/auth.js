@@ -27,4 +27,21 @@ export const logoutUser = async()=>{
     }
 }
 
+export const getResetLink = async(email)=>{
+    try {
+        const data = await AXIOS_POST(`/auth/forgot-password`, {email});
+        return data;
+    } catch (error) {
+        throw error?.response?.data || error;
+    }
+}
+
+export const resetUserPassword = async(newPassword, token)=>{
+    try {
+        const data = await AXIOS_POST('/auth/reset-password', {newPassword, token});
+        return data;
+    } catch (error) {
+        throw error?.response?.data || error;
+    }
+}
 

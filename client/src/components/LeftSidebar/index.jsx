@@ -52,7 +52,8 @@ const LeftSidebar = () => {
                 <h2 className="text-xl font-bold text-center mb-1">OutreachIQ</h2>
                 <TextBadge text={"Beta"} type={""} />
             </div>
-            <p>{userObj.name} {userObj.id}</p>
+            {/* stupid para for checking user id */}
+            {/* <p>{userObj.name} {userObj.id}</p> */}
             <ul className="m-1 flex flex-col gap-4">
                 {!flowStarted && <ListItem icon={<IoMdAdd />} text={"Create Flow"} onClick={handleCreate} />}
                 {flowStarted && <ListItem icon={<RxReset />} text={"Reset flow"} onClick={handleReset} />}

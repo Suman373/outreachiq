@@ -95,7 +95,7 @@ export const validateFlow = (data) => {
 }
 
 export const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,10}(\.[a-zA-Z]{2,10})*$/;
     return regex.test(email);
 }
 
