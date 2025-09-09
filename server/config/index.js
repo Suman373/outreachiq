@@ -6,4 +6,5 @@ module.exports = {
     APP_SECRET: process.env.APP_SECRET,
     NODE_ENV: process.env.NODE_ENV || "development",
     REDIS_CLIENT_URL: process.env.REDIS_CLIENT_URL,
+    RESET_SECRET: process.env.RESET_SECRET,
 }

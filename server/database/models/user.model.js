@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema({
     },
     renewalDate: { type: Date },
     flows: [{ type: mongoose.Schema.Types.ObjectId, ref: 'flow' }],
+    passwordChangedAt: {type:Date}
 }, {
     toJSON: {
         transform(doc, ret) {

@@ -24,10 +24,10 @@ module.exports.ValidateHashedPassword = async (password, hashedPassword) => {
 }
 
 
-module.exports.GenerateJWT = async (payload) => {
+module.exports.GenerateJWT = async (payload, secret, expiry) => {
     try {
-        const token = await jwt.sign(payload, APP_SECRET, {
-            expiresIn: "30d"
+        const token = await jwt.sign(payload, secret, {
+            expiresIn: expiry
         });
         if (token) return token;
         else throw new Error("Token generation failed");
@@ -36,16 +36,13 @@ module.exports.GenerateJWT = async (payload) => {
     }
 }
 
-module.exports.ValidateJWT = async (req) => {
+module.exports.ValidateJWT = async (token, secret) => {
     try {
-        const token = req.get("Authorization");
-        console.log(token);
-        const payload = await jwt.verify(token.split(" ")[1], APP_SECRET);
-        req.user = payload;
-        return true;
+        const payload = jwt.verify(token, secret);
+        return { valid: true, payload };
     } catch (error) {
         console.log(error);
-        return false;
+        return { valid: false, payload: null };
     }
 }
 
@@ -75,8 +72,8 @@ module.exports.Logger = (level, filename, data) => {
             time: timeStamp,
             ...data
         };
-        fs.appendFile(path.join(__dirname, "..", "logs",`${filename}.jsonl`), JSON.stringify(logContent,2,null), (err)=> {
-            if(err){
+        fs.appendFile(path.join(__dirname, "..", "logs", `${filename}.jsonl`), JSON.stringify(logContent, 2, null), (err) => {
+            if (err) {
                 throw new Error(err);
             }
         });
@@ -86,13 +83,13 @@ module.exports.Logger = (level, filename, data) => {
 }
 
 
-module.exports.ValidateEmail = (email)=>{
+module.exports.ValidateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
 
 module.exports.ValidatePassword = (password) => {
-  const regex =
-    /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
-  return regex.test(password);
+    const regex =
+        /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    return regex.test(password);
 };
