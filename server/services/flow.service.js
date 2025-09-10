@@ -7,34 +7,30 @@ const { scheduleEmail } = require('./schedule.service');
 
 // agenda job success
 agenda.on(agendaJobs.SUCCESS_SEND_EMAIL, async (job) => {
-    const { flowId } = job.attrs.data;
-    const flow = await FlowModel.findOne({ flowId });
-    flow.completedJobs += 1;
-    // all jobs finished
+    const { flowId } = await job.attrs.data;
+    const flow = await FlowModel.findOneAndUpdate(
+        { flowId },
+        { $inc: { completedJobs: 1 } },
+        { new: true }
+    );
     if (flow.completedJobs + flow.failedJobs >= flow.totalJobs) {
-        if (flow.failedJobs > 0) {
-            flow.status = "partial";
-        } else {
-            flow.status = "completed";
-        }
+        flow.status = flow.failedJobs > 0 ? "partial" : "completed";
+        await flow.save();
     }
-    await flow.save();
 });
 
 // agenda job fail
 agenda.on(agendaJobs.FAILURE_SEND_EMAIL, async (err, job) => {
-    const { flowId } = job.attrs.data;
-    const flow = await FlowModel.findOne({ flowId });
-    flow.failedJobs += 1;
-    // all jobs finished
+    const { flowId } = await job.attrs.data;
+    const flow = await FlowModel.findOneAndUpdate(
+        { flowId },
+        { $inc: { failedJobs: 1 } },
+        { new: true }
+    );
     if (flow.completedJobs + flow.failedJobs >= flow.totalJobs) {
-        if (flow.completedJobs > 0) {
-            flow.status = "partial";
-        } else {
-            flow.status = "failed";
-        }
+        flow.status = flow.completedJobs > 0 ? "partial" : "failed";
+        await flow.save();
     }
-    await flow.save();
 });
 
 
@@ -49,8 +45,8 @@ const processFlow = async (flowData, leads) => {
             totalJobs,
 
         };
-        const dbRes = await FlowModel.create({ ...newFlowObj, leads });
-        if (!dbRes) {
+        const newFlow = await FlowModel.create({ ...newFlowObj, leads });
+        if (!newFlow) {
             throw new Error("Failed to save flow in database");
         }
         const nodes = flowData.nodes;
@@ -118,6 +114,8 @@ const processFlow = async (flowData, leads) => {
                 console.log(`Email failed for node - ${nodeId}, email-${email}, flow-${flowId}`);
             }
         });
+        newFlow.status = "scheduled";
+        await newFlow.save();
     } catch (error) {
         Logger(LOG_LEVELS.ERROR, LOG_PATHS.SERVICELOG, {
             title: "PROCESS FLOW FAILED",
@@ -169,8 +167,8 @@ const fetchAllFlows = async () => {
 
 const fetchFlowsByUser = async (userId) => {
     try {
-        const flows = FlowModel.find({userId});
-        if(!flows) throw new Error("Flows not found by user");
+        const flows = FlowModel.find({ userId });
+        if (!flows) throw new Error("Flows not found by user");
         return flows;
     } catch (error) {
         throw error;
@@ -180,8 +178,8 @@ const fetchFlowsByUser = async (userId) => {
 
 const fetchFlowById = async (flowId) => {
     try {
-        const flow = FlowModel.findOne({flowId});
-        if(!flow) throw new Error("Flow not found by flowId");
+        const flow = FlowModel.findOne({ flowId });
+        if (!flow) throw new Error("Flow not found by flowId");
         return flow;
     } catch (error) {
         throw error;
