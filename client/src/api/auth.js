@@ -1,4 +1,4 @@
-import { AXIOS_POST } from './axiosClient';
+import { AXIOS_GET, AXIOS_POST } from './axiosClient';
 
 export const registerUser = async (name, email, password) => {
     try {
@@ -20,7 +20,7 @@ export const loginUser = async (email, password) => {
 
 export const logoutUser = async()=>{
     try {
-        const data = await AXIOS_POST(`/auth/logout`,{});
+        const data = await AXIOS_GET(`/auth/logout`,{});
         return data;
     } catch (error) {
         throw error?.response?.data || error;

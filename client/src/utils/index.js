@@ -11,7 +11,8 @@ export const flowStatus = Object.freeze({
     "draft": "Draft",
     "scheduled": "Scheduled",
     "failed": "Failed",
-    "completed": "Completed"
+    "completed": "Completed",
+    "partial": "Partial"
 });
 
 export const appLanguages = [
@@ -20,8 +21,6 @@ export const appLanguages = [
     { name: "🇫🇷 French", value: "fr" },
     { name: "🇩🇪 German", value: "de" },
     { name: "🇮🇳 Hindi", value: "hi" },
-    { name: "🇨🇳 Mandarin Chinese", value: "zh" },
-    { name: "🇸🇦 Arabic", value: "ar" },
 ]
 
 export const monthsArr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

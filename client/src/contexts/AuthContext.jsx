@@ -29,8 +29,8 @@ export const AuthProvider = ({ children }) => {
             setUserObj({});
             setIsLoggedIn(false);
             localStorage.removeItem('outreachiq-user');
-            // const data = await logoutUser();
-            // if (!data?.status === 200) throw new Error;
+            const data = await logoutUser();
+            if (!data?.status === 200) throw new Error;
         } catch (error) {
             console.log(error);
         } 

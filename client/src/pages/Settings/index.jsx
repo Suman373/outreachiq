@@ -1,5 +1,4 @@
 import { FaArrowLeft, FaExternalLinkAlt } from "react-icons/fa";
-import { TextBadge } from "../../components";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useEffect, useState } from "react";
@@ -102,6 +101,7 @@ const Settings = () => {
             const data = await patchUserSettings(userObj.id, settingsState);
             // console.log(data);
             setSettingsState(data.result);
+            setIsDirty(false);
             toast.success("Settings updated successfully");
         } catch (error) {
             console.log(error);
@@ -112,8 +112,9 @@ const Settings = () => {
     const resetUserSettings = async() =>{
         try {
             const data = await patchDefaultSettings(userObj.id);
-            console.log(data);
+            // console.log(data);
             setSettingsState(data.result);
+            setIsDirty(false);
             toast.success("Settings has been reset successfully");
         } catch (error) {
             console.log(error);

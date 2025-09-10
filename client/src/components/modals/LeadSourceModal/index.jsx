@@ -9,6 +9,7 @@ import { nanoid } from 'nanoid';
 import { useAuthContext } from "../../../contexts/AuthContext.jsx";
 import TextBadge from "../../shared/misc/TextBadge.jsx";
 import toast from "react-hot-toast";
+import ViewLeadsModal from "../ViewLeadsModal/index.jsx";
 
 const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource }) => {
 
@@ -24,7 +25,7 @@ const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource }) =>
     const [error, setError] = useState("");
     const [parsedLeads, setParsedLeads] = useState(savedLeadLists[0].leads);
     const [activeId, setActiveId] = useState("sample-leads");
-
+    const [showLeadsList, setShowLeadsList] = useState(false);
     const { userObj } = useAuthContext();
     console.log(userObj.usage, userObj.quota);
 
@@ -113,6 +114,11 @@ const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource }) =>
 
     return (
         <>
+         {showLeadsList && <ViewLeadsModal
+            leadsArr={parsedLeads}
+            viewLeadsModal={showLeadsList}
+            closeViewLeadsModal={()=> setShowLeadsList(false)}
+         />}
             <Modal
                 isOpen={leadModalOpen}
                 onRequestClose={closeLeadModal}
@@ -174,6 +180,9 @@ const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource }) =>
                                                     value={selectedLeadTitle}
                                                     onChange={(e) => setSelectedLeadTitle(e.target.value)}
                                                 />
+                                                <p 
+                                                onClick={()=> setShowLeadsList(true)}
+                                                className="text-amber-200 cursor-pointer">Preview Leads</p>
                                             </>
                                         }
                                         <p className="text-md">{selectedLeadTitle} ({parsedLeads.length} leads)</p>
