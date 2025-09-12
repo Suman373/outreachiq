@@ -58,7 +58,7 @@ const Settings = () => {
 
     // console.log(settingsState);
 
-    const invalidSettings = ["emailProvider", "webhooksEnabled", "webhooks", "paymentMethods"];
+    const invalidSettings = ["emailProvider", "webhooksEnabled", "webhooks", "paymentMethods","twoFactorAuth"];
 
     const handleUpdateSettings = (key, value) => {
         if (invalidSettings.includes(key)) {
@@ -128,7 +128,7 @@ const Settings = () => {
     }, []);
 
     return (
-        <section className="">
+        <section className="h-screen overflow-y-scroll pb-10">
             <div className="h-fit flex items-center justify-start gap-2">
                 <FaArrowLeft onClick={() => navigate("/")} />
                 <h1 className="text-lg md:text-xl font-semibold">Settings</h1>

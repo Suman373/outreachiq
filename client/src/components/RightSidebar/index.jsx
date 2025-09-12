@@ -8,8 +8,12 @@ import TextBadge from "../shared/misc/TextBadge";
 import { IoPerson } from "react-icons/io5";
 import { PiExportBold } from "react-icons/pi";
 import { flowStatus } from "../../utils";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const RightSidebar = () => {
+
+    const navigate = useNavigate();
 
     const {
         scheduleFlow,
@@ -23,31 +27,37 @@ const RightSidebar = () => {
 
     const hasSequence = flowData.nodes.length > 2 && flowData.edges.length > 1;
 
-    if (!flowStarted) {
-        return (
-            <div className="flex flex-col gap-1">
-                <Header />
-            </div>
-        )
-    }
-
     const handleViewProfileClick = () => {
-
+        navigate('profile');
     }
 
     // to be done later when offering pro subs
     const handleExportClick = () => {
-
+       toast.error("Feature is not available right now");
     }
+
+
+    if (!flowStarted) {
+        return (
+            <div className="flex flex-col gap-1">
+                <Header
+                    handleViewProfileClick={handleViewProfileClick}
+                    handleExportClick={handleExportClick}
+                />
+            </div>
+        )
+    }
+
 
     return (
         <div className="flex flex-col gap-1">
             <div className="flex justify-between">
                 <Header
+                    handleViewProfileClick={handleViewProfileClick}
                     handleExportClick={handleExportClick}
-                    handleViewProfileClick={handleViewProfileClick} />
+                />
                 <div className="flex gap-2 items-center">
-                    <TextBadge type={"info"} text={flowStatus[flowData.status || "draft"]}/>
+                    <TextBadge type={"info"} text={flowStatus[flowData.status || "draft"]} />
                     {flowData.scheduled === false ?
                         <button
                             disabled={!hasSequence}

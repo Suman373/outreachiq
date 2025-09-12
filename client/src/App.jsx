@@ -2,6 +2,7 @@ import { Suspense, useEffect } from "react";
 import {
   Analytics,
   Auth,
+  ContactUs,
   Flow,
   FlowDetails,
   FlowLogs,
@@ -10,7 +11,8 @@ import {
   Preloader,
   ResetPassword,
   SavedFlows,
-  Settings
+  Settings,
+  UserProfile
 } from "./pages";
 import { BrowserRouter as BRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthContext } from "./contexts/AuthContext";
@@ -42,10 +44,12 @@ const App = () => {
             <Route path="analytics" element={<Analytics />}></Route>
             <Route path="logs" element={<FlowLogs />}></Route>
             <Route path="settings" element={<Settings />}></Route>
+            <Route path="profile" element={<UserProfile/>}></Route>
           </Route>
           <Route path="/register" element={!isLoggedIn ? <Auth /> : <Navigate to="/" />}></Route>
           <Route path="/reset-password" element={!isLoggedIn ? <ResetPassword /> : <Navigate to="/" />}></Route>
           <Route path="/verify" element={<><h1>Verify your email</h1></>}></Route>
+          <Route path="/contact-us" element={<ContactUs/>}></Route>
           <Route path="*" element={<h1>Page not found</h1>}></Route>
         </Routes>
       </Suspense >

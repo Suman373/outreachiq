@@ -9,3 +9,5 @@ export {default as Analytics} from './Analytics/index';
 export {default as FlowLogs} from './FlowLogs/index';
 export {default as FlowDetails} from './FlowDetails/index';
 export {default as ResetPassword} from './ResetPassword/index';
+export {default as UserProfile} from './UserProfile/index';
+export {default as ContactUs} from './ContactUs/index';

@@ -15,6 +15,12 @@ export const flowStatus = Object.freeze({
     "partial": "Partial"
 });
 
+export const billingDates = Object.freeze({
+    startDate: "Start Date",
+    endDate: "End Date",
+    billingAmount: "Billing Amount"
+})
+
 export const appLanguages = [
     { name: "🇺🇸 English", value: "en" },
     { name: "🇪🇸 Spanish", value: "es" },
