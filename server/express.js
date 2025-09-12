@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const { 
     FlowRoute,
     AuthRoute,
@@ -7,11 +8,13 @@ const {
     AnalyticsRoute, 
     SettingsRoute
 } = require('./routes/index');
+const { verifyAuthRequest } = require('./middleware/auth');
 
 module.exports = async(app)=>{
+    app.use(cors({origin:"*"}));
+    app.use(cookieParser());
     app.use(express.json());
     app.use(express.urlencoded({extended:true, limit:'10mb'}));
-    app.use(cors({origin:"*"}));
 
     // status check
     app.get('/',(req,res)=> res.status(200).send("Welcome to OutreachIQ Backend Web Server"));

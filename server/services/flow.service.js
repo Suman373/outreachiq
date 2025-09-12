@@ -1,6 +1,6 @@
 const agenda = require('../config/agenda');
 const { agendaJobs } = require('../constants');
-const { FlowModel } = require('../database/models');
+const { FlowModel, UserModel } = require('../database/models');
 const { ConvertToSeconds, Logger, LOG_LEVELS, LOG_PATHS } = require('../utils/');
 const { scheduleEmail } = require('./schedule.service');
 
@@ -36,9 +36,22 @@ agenda.on(agendaJobs.FAILURE_SEND_EMAIL, async (err, job) => {
 
 const processFlow = async (flowData, leads) => {
     try {
-        // save in db 
-        let emailNodes = 0;
-        flowData.nodes.forEach((nd) => nd.type === "email" && emailNodes++);
+        const emailNodes = flowData.nodes.filter(nd => nd.type === "email").length;
+        // quota check
+        const user = await UserModel.findOne({ id: flowData.userId });
+        if (user.usage.emails + (leads.length * emailNodes) > user.quota.emails) {
+            throw new Error("Emails quota exceeded");
+        }
+        if (user.usage.flows + 1 > user.quota.flows) {
+            throw new Error("Flows quota exceeded");
+        }
+        if (user.usage.nodes + flowData.nodes.length - 2 > user.quota.nodes) {
+            throw new Error("Nodes quota exceeded");
+        }
+        if (user.usage.leads + leads.length > user.quota.leads) {
+            throw new Error("Leads quota exceeded");
+        }
+        // presist in db 
         const totalJobs = leads.length * emailNodes;
         const newFlowObj = {
             ...flowData,
@@ -49,14 +62,14 @@ const processFlow = async (flowData, leads) => {
         if (!newFlow) {
             throw new Error("Failed to save flow in database");
         }
+
         const nodes = flowData.nodes;
         nodes.shift();
         nodes.pop();
 
+        // precomputing delays 
         const delayMap = new Map();
         let cumulativeDelay = 0;
-        // precomputing delays 
-        // console.log(nodes.length);
         for (const node of nodes) {
             const { delay, format } = node.data;
             if (node.type === 'wait') {
@@ -66,7 +79,7 @@ const processFlow = async (flowData, leads) => {
                 delayMap.set(node.id, cumulativeDelay);
             }
         }
-        // console.log(delayMap);
+
         const emailPromises = [];
         for (const lead of leads) {
             const { name, email } = lead;
@@ -97,13 +110,12 @@ const processFlow = async (flowData, leads) => {
         }
         const results = await Promise.allSettled(emailPromises);
         results.forEach((r) => {
-            console.log(`${JSON.stringify(r)} from promise`);
+            // console.log(`${JSON.stringify(r)} from promise`);
             if (r.status === "fulfilled") {
                 const { nodeId, email, flowId } = r.value;
                 console.log(`Email scheduled for node - ${nodeId}, email-${email}, flow-${flowId}`);
             } else {
                 const { nodeId, email, flowId, err } = r.reason;
-                // logger error
                 Logger(LOG_LEVELS.ERROR, LOG_PATHS.SERVICELOG, {
                     title: "PROCESS FLOW FAILED",
                     nodeId,
@@ -114,8 +126,14 @@ const processFlow = async (flowData, leads) => {
                 console.log(`Email failed for node - ${nodeId}, email-${email}, flow-${flowId}`);
             }
         });
+        // post scheduling updates 
         newFlow.status = "scheduled";
         await newFlow.save();
+        user.flows.push(newFlow._id);
+        user.usage.flows += 1;
+        user.usage.nodes += (flowData.nodes.length - 2);
+        user.usage.leads += (leads.length);
+        await user.save();
     } catch (error) {
         Logger(LOG_LEVELS.ERROR, LOG_PATHS.SERVICELOG, {
             title: "PROCESS FLOW FAILED",

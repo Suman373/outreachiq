@@ -5,7 +5,7 @@ const findAllUsers = async()=>{
 }
 
 const findUserById = async(id)=>{
-    return await UserModel.findOne({id});
+    return await UserModel.findOne({id}).populate("flows");
 }
 
 const editUser = async(id, payload)=>{
