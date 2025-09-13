@@ -1,7 +1,7 @@
 {
   "name": "outreachiq-client",
   "private": true,
-  "version": "1.6.11",
+  "version": "1.6.12",
   "type": "module",
   "author": "suman-roy",
   "scripts": {
