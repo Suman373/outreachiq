@@ -15,3 +15,4 @@ export {default as ResetScroll} from './shared/misc/ResetScroll';
 export {default as TextBadge} from './shared/misc/TextBadge';
 export {default as Chart} from './Chart/index';
 export {default as ViewLeadsModal} from './modals/ViewLeadsModal/index';
+export {default as ActionModal} from './modals/ActionModal/index';

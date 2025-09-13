@@ -6,11 +6,13 @@ import { MdOutlineLogout } from "react-icons/md";
 import toast from "react-hot-toast";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useFlowContext } from "../../contexts/FlowContext";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SiGoogleanalytics } from "react-icons/si";
 import TextBadge from "../shared/misc/TextBadge";
 import { LuLogs } from "react-icons/lu";
+import ActionModal from "../modals/ActionModal";
+
 
 
 const LeftSidebar = () => {
@@ -24,6 +26,9 @@ const LeftSidebar = () => {
     const {
         userObj,
         logoutAndClearUser } = useAuthContext();
+
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
 
     const handleReset = () => {
         handleNavigate(''); // root of nested route -> Flow 
@@ -48,6 +53,18 @@ const LeftSidebar = () => {
 
     return (
         <>
+            {
+                isLogoutModalOpen && (
+                    <ActionModal
+                        isOpen={isLogoutModalOpen}
+                        onRequestClose={()=> {setIsLogoutModalOpen(false)}}
+                        title="Confirm Logout"
+                        description="Are you sure you want to log out?"
+                        yesAction={handleLogout}
+                        noAction={()=> {setIsLogoutModalOpen(false)}}
+                    />
+                )
+            }
             <div className="flex items-center justify-center gap-2 mb-5">
                 <h2 className="text-xl font-bold text-center mb-1">OutreachIQ</h2>
                 <TextBadge text={"Beta"} type={""} />
@@ -57,28 +74,28 @@ const LeftSidebar = () => {
             <ul className="m-1 flex flex-col gap-4">
                 {!flowStarted && <ListItem icon={<IoMdAdd />} text={"Create Flow"} onClick={handleCreate} />}
                 {flowStarted && <ListItem icon={<RxReset />} text={"Reset flow"} onClick={handleReset} />}
-                <ListItem 
-                icon={<FaBookmark />} 
-                onClick={() => handleNavigate("saved-flows")} 
-                text={"Saved Flows"} />
-                <ListItem 
-                icon={<SiGoogleanalytics />} 
-                paywall={true} 
-                onClick={()=> handleNavigate("analytics")}
-                text={"Analytics"} />
-                <ListItem 
-                icon={<LuLogs />} 
-                paywall={true} 
-                onClick={()=>  handleNavigate("logs")}
-                text={"FlowLogs"} />
-                <ListItem 
-                icon={<IoIosSettings />} 
-                onClick={() => handleNavigate("settings")} 
-                text={"Settings"} />
-                <ListItem 
-                icon={<MdOutlineLogout />} 
-                text={"Logout"} 
-                onClick={handleLogout} />
+                <ListItem
+                    icon={<FaBookmark />}
+                    onClick={() => handleNavigate("saved-flows")}
+                    text={"Saved Flows"} />
+                <ListItem
+                    icon={<SiGoogleanalytics />}
+                    paywall={true}
+                    onClick={() => handleNavigate("analytics")}
+                    text={"Analytics"} />
+                <ListItem
+                    icon={<LuLogs />}
+                    paywall={true}
+                    onClick={() => handleNavigate("logs")}
+                    text={"FlowLogs"} />
+                <ListItem
+                    icon={<IoIosSettings />}
+                    onClick={() => handleNavigate("settings")}
+                    text={"Settings"} />
+                <ListItem
+                    icon={<MdOutlineLogout />}
+                    text={"Logout"}
+                    onClick={()=> setIsLogoutModalOpen(true)} />
             </ul>
         </>
     )

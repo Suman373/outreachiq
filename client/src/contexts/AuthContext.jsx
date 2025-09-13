@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { fetchUserData } from "../api/user";
 import { logoutUser } from "../api/auth";
+import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
 
@@ -26,13 +27,14 @@ export const AuthProvider = ({ children }) => {
 
     const logoutAndClearUser = async () => {
         try {
+            const response = await logoutUser();
+            if (!response || response.status !== 200) throw new Error;
             setUserObj({});
             setIsLoggedIn(false);
             localStorage.removeItem('outreachiq-user');
-            const data = await logoutUser();
-            if (!data?.status === 200) throw new Error;
         } catch (error) {
             console.log(error);
+            toast.error("Logout failed.\nPlease try again after sometime");
         } 
     }
 

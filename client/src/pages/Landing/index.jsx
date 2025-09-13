@@ -102,7 +102,7 @@ const Landing = () => {
                         </div>
                         <div className="text-center">
                             <h1 className="text-4xl md:text-7xl font-medium my-2">Pathway To Successful Outreach</h1>
-                            <p className="text-2xl my-2">The only end-to-end outreach solution</p>
+                            <p className="text-2xl my-4">The only end-to-end outreach solution</p>
                             <p className="text-xl my-2">Build email flows with AI assistance</p>
                         </div>
                         <div className="flex items-center mt-[30px] gap-5">
