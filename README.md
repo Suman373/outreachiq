@@ -1,8 +1,50 @@
-# OutreachIQ – Cold Email Automation & Flow Builder
+# OutreachIQ – Email Outreach Automation Builder
 
-### Introduction
-OutreachIQ is a **fullstack cold email automation platform** that enables users to design, schedule, and track multi-step outreach campaigns.  
-With a visual flow builder, lead targeting, and real-time analytics, OutreachIQ streamlines cold email workflows for individuals and teams.  
+![image](docs/screenshots/landing.png)
+
+<div style="display:flex; justify-content: center; gap:5px ; flex-wrap:wrap;">
+
+![image](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+
+![image](https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+
+![image](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+![image](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white)
+
+![image](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+
+![image](https://img.shields.io/badge/axios-671ddf?&style=for-the-badge&logo=axios&logoColor=white)
+
+![image](https://img.shields.io/badge/Framer-black?style=for-the-badge&logo=framer&logoColor=blue)
+
+![image](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
+
+![image](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
+
+![image](https://img.shields.io/badge/redis-CC0000.svg?&style=for-the-badge&logo=redis&logoColor=white)
+
+![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+
+</div>
+
+### Table of Contents
+
+- [Description](#description)
+- [Tech Stack](#tech-stack)
+- [Features](#features)
+- [Directory Structure & Architecture](#directory-structure--architecture)
+- [Screenshots](#screenshots)
+- [Local Development & Setup](#local-development--setup)
+- [Future scope](#future-scope)
+- [License](#license)
+- [Feedback](#feedback)
+
+---
+
+### Description
+OutreachIQ is a fullstack email automation flow creator platform that enables users to design, schedule, and track multi-step outreach campaigns.  
+With a visual flow builder, lead targeting, and real-time analytics, OutreachIQ streamlines cold email outreach workflows for startups.  
 
 ---
 
@@ -32,29 +74,68 @@ With a visual flow builder, lead targeting, and real-time analytics, OutreachIQ 
 
 **Directory details**
 - **client/** – React frontend with Tailwind CSS
-- **pages** – Route-based views (Auth, Home, Flow Builder, SavedFlows, Settings)  
-- **components** – Reusable UI (tables, forms, preloader, etc.)  
-- **contexts** – Global state management (AuthContext, FlowContext)  
-- **utils** – Helpers, constants, and logging utilities  
-
-- **server/** – Node.js + Express backend web server with RESET APIs 
-- **config** – Central configs (MongoDB, Agenda instance, environment vars)  
-- **services** – Business logic (Flow service, Schedule service, Email service)  
-- **models** – Mongoose schemas (User, Flow, Leads, etc.)  
-- **routes** – REST API endpoints for flows, users, and settings  
-- **utils** – Logger, constants, error handling  
+- **pages** – Route-based views 
+- **components** – Reusable UI 
+- **contexts** – Global state management to prevent props drilling
+- **utils(client)** – Helpers, constants, and utility functions 
+- **data** - JSON files for static data and email templates
+- **server/** – Node.js + Express backend web server with RESTful APIs 
+- **config** – Central configurations for env variables and instances
+- **services** – Core business logic and interaction with database models  
+- **models** – Flexible mongoose schemas   
+- **routes** – REST API endpoints 
+- **utils(server)** – Logger, constants, error handling functions  
 
 
 **Architecture at a glance:**  
 - **Frontend (React):** Handles UI, state management, client side rendering (CSR) and routing.  
-- **Backend (Node/Express):** REST APIs, authentication, job scheduling, DB persistence.  
+- **Backend (Node + Express):** REST APIs, authentication, job scheduling, DB persistence.  
 - **Job Scheduler (Agenda):** Runs background tasks like sending emails at scheduled times, check job success and failures.  
 - **NoSQL Database (MongoDB):** Stores users, flows, leads, and scheduled jobs metadata.
 - **Caching (Redis):** Caching layer to improve response times and reduce redundant database queries. 
 
 ---
 
-## Ongoing Features
+### Screenshots
+
+
+---
+
+### Local Development & Setup
+
+```bash
+# Clone the repo
+git clone https://github.com/Suman373/outreachiq.git
+
+# Move to the project 
+cd outreachiq
+
+# Change directory to client and server using
+cd client
+cd server
+
+# Install dependencies in both dir 
+npm install
+
+# Run the client locally
+npm run dev
+
+# Start the server locally
+npm run dev
+
+# Run redis with docker 
+npm run redis-start
+
+# To stop the container
+npm run redis-stop
+
+# To run tests
+npm run test
+```
+
+---
+
+### Future Scope
 <!-- - 📌 **Deployment** – Hosting frontend (Vercel/Netlify) and backend (Render/Heroku)   -->
 - **Two-factor authentication** - Additional layer of security
 - **Logs Visualization** –  Live view of jobs being executed and the logs related to each successful delivery. 
@@ -62,9 +143,23 @@ With a visual flow builder, lead targeting, and real-time analytics, OutreachIQ 
 - **Retry Logic** – Automatic retries for failed jobs
 - **Role-based Access Control** – Multi-user/team support for campaigns  
 
----
-
-## 📸 Screenshots
-(Add UI screenshots here)
 
 ---
+
+### License
+![image](https://img.shields.io/badge/MIT-green?style=for-the-badge)
+
+
+---
+
+### Feedback
+
+We’d love to hear your thoughts and suggestions to improve this project!
+If you have any feedback, questions, or ideas for new features, feel free to reach out:
+
+Email: reachsuman.roy@gmail.com
+
+---
+
+
+### 
