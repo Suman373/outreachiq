@@ -10,6 +10,7 @@ import { PiExportBold } from "react-icons/pi";
 import { flowStatus } from "../../utils";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 const RightSidebar = () => {
 
@@ -104,13 +105,14 @@ const RightSidebar = () => {
 
 const Header = ({ handleExportClick, handleViewProfileClick }) => {
     const [expandProfile, setExpandProfile] = useState(false);
+    const {userObj} = useAuthContext();
     return (
         <div className="flex justify-between">
             <div
                 onMouseEnter={() => setExpandProfile(true)}
                 onMouseLeave={() => setExpandProfile(false)}
                 className="flex gap-1 items-center cursor-pointer relative">
-                <img className="h-8 md:w-8 rounded-full" src="https://images.unsplash.com/photo-1556983990-db5d0cc3c67e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGR1bW15fGVufDB8fDB8fHww" alt="profile" />
+                <img className="h-8 md:w-8 rounded-full" src={userObj.profileImage?.url || "https://images.unsplash.com/photo-1556983990-db5d0cc3c67e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGR1bW15fGVufDB8fDB8fHww"} alt="profile" />
                 <span className="transition-all duration-1000">{expandProfile ? <FaAngleUp className="text-neutral-200" /> : <FaAngleDown className="text-neutral-200" />}</span>
                 {expandProfile && <div className=" w-[200px] h-[100px] flex flex-col items-center justify-start gap-2 p-2 absolute -left-[150px] top-[30px] bg-neutral-800 border  border-neutral-600 rounded-md">
                     <button

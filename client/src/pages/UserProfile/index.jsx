@@ -5,15 +5,19 @@ import { useAuthContext } from "../../contexts/AuthContext";
 import toast from "react-hot-toast";
 import { billingDates, validatePassword } from "../../utils";
 import moment from 'moment';
+import { updateUserProfileImg } from "../../api/user";
 
 const UserProfile = () => {
     const navigate = useNavigate();
     const { userObj } = useAuthContext();
 
+    const [profileImgUrl, setProfileImgUrl] = useState(userObj?.profileImage?.url || "https://images.unsplash.com/photo-1556983990-db5d0cc3c67e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGR1bW15fGVufDB8fDB8fHww");
+    
     const [profileData, setProfileData] = useState({
         name: userObj?.name || "",
         email: userObj?.email || "",
-        phoneNumber: userObj?.phoneNumber || "+91XXXXXXXXX",
+        phoneNumber: userObj?.phoneNumber || "",
+        country: userObj?.country || "",
     });
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -48,6 +52,24 @@ const UserProfile = () => {
                 </div>
             </div>
         )
+    }
+
+    const handleImageUpload = async(e)=>{
+        try {
+            const file = e.target.files[0];
+            console.log(file);
+            if(!file) return toast.error("No file detected");
+            if(!userObj.id) return toast.error("Id is required");
+            const formData = new FormData();
+            formData.append("image",file);
+            const data = await updateUserProfileImg(userObj.id, formData);
+            if(data.status !== 200) throw new Error();
+            setProfileImgUrl(data.data?.result);
+            toast.success("Profile image updated successfully");
+        } catch (error) {
+            console.log(error);
+            toast.error("Failed to update image.\nPlease try again later");
+        }
     }
 
     const handleChange = (e) => {
@@ -96,10 +118,18 @@ const UserProfile = () => {
             <div className="settings-main-div">
                 {/* Profile Picture */}
                 <div className="settings-div flex flex-col items-center justify-center gap-4 h-fit py-3">
-                    <img className="h-20 md:w-20 rounded-full" src="https://images.unsplash.com/photo-1556983990-db5d0cc3c67e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGR1bW15fGVufDB8fDB8fHww" alt="profile" />
-                    <button className="text-sm text-brand underline">
-                        Change Picture
-                    </button>
+                    <img 
+                    className="object-contain h-20 md:w-20 rounded-full border border-brand bg-brandLight" 
+                    src={profileImgUrl} alt="profile" />
+                    <label 
+                    className="text-brand font-lg underline cursor-pointer"
+                    htmlFor="profileImage">Change picture</label>
+                    <input
+                        onChange={handleImageUpload}
+                        className="opacity-0"
+                        id="profileImage"
+                        accept="image/*"
+                        type="file" />
                 </div>
                 {/* personal details  */}
                 <h2 className="text-base md:text-lg font-medium text-brand my-4 px-2">
