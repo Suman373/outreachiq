@@ -1,10 +1,10 @@
-const { findAllSettings, findSettingsByUserId, editSettings, createSettings, discardSettings } = require("../services/settings.service");
+const { SETTINGS_SERVICE } = require('../services/index');
 
 const addNewSettings = async (req, res) => {
     try {
         const { userId } = req.body;
         if (!userId) return res.status(400).json({ message: "userId is required" });
-        const newSettings = await createSettings(userId);
+        const newSettings = await SETTINGS_SERVICE.createSettings(userId);
         if (!newSettings) {
             return res.status(404).json({ message: "Settings with userId not found" });
         }
@@ -17,7 +17,7 @@ const addNewSettings = async (req, res) => {
 
 const getAllSettings = async (req, res) => {
     try {
-        const allSettings = await findAllSettings();
+        const allSettings = await SETTINGS_SERVICE.findAllSettings();
         res.status(200).json({ message: 'All settings fetched successfully', result: allSettings });
     } catch (error) {
         console.error(error);
@@ -29,7 +29,7 @@ const getSettingsByUserId = async (req, res) => {
     try {
         const { id: userId } = req.params;
         if (!userId) return res.status(400).json({ message: "userId is required" });
-        const userSettings = await findSettingsByUserId(userId);
+        const userSettings = await SETTINGS_SERVICE.findSettingsByUserId(userId);
         if (!userSettings) {
             return res.status(404).json({ message: "Settings with userId not found" });
         }
@@ -44,7 +44,7 @@ const updateSettings = async (req, res) => {
     try {
         const { id: userId } = req.params;
         if (!userId) return res.status(400).json({ message: "userId is required" });
-        const updatedSettings = await editSettings(userId, req.body);
+        const updatedSettings = await SETTINGS_SERVICE.editSettings(userId, req.body);
         if (!updatedSettings) {
             return res.status(404).json({ message: "Settings with userId not found" });
         }
@@ -82,7 +82,7 @@ const resetSettings = async (req, res) => {
             }
         };
 
-        const newSettings = await editSettings(userId, defaultSettingsObj);
+        const newSettings = await SETTINGS_SERVICE.editSettings(userId, defaultSettingsObj);
         if (!newSettings) {
             return res.status(404).json({ message: "Settings with userId not found" });
         }
@@ -97,7 +97,7 @@ const deleteSettings = async (req, res) => {
     try {
         const { id:userId } = req.params;
         if (!userId) return res.status(400).json({ message: "userId is required" });
-        const deletedSetting = await discardSettings(userId);
+        const deletedSetting = await SETTINGS_SERVICE.discardSettings(userId);
         if (!deletedSetting) {
             return res.status(404).json({ message: "Settings with userId not found" });
         }

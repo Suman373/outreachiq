@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const { APP_SECRET } = require('../config/index');
 const fs = require('fs');
 const path = require('path');
+const { DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const s3 = require('../config/s3client.js');
 
 const timeUnitsInSeconds = {
     "Minutes": 60,        // 1 minute = 60 seconds
@@ -92,4 +94,13 @@ module.exports.ValidatePassword = (password) => {
     const regex =
         /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
     return regex.test(password);
+};
+
+
+module.exports.DeleteFileFromS3 = async (bucket, key) => {
+    const command = new DeleteObjectCommand({
+        Bucket: bucket,
+        Key: key,
+    });
+    return await s3.send(command);
 };

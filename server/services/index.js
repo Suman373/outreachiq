@@ -4,4 +4,6 @@ module.exports = {
     FLOW_SERVICE: require('./flow.service'),
     AUTH_SERVICE: require('./auth.service'),
     ANALYTICS_SERVICE: require('./analytics.service'),
+    SETTINGS_SERVICE: require('./settings.service'),
+    USER_SERVICE: require('./user.service'),
 }
