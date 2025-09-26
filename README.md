@@ -178,6 +178,9 @@ With a visual flow builder, lead targeting, and real-time analytics, OutreachIQ 
 ##### Logout confirmation
 ![](docs/screenshots/logout.png)
 
+##### Contact page
+![](docs/screenshots/contact.png)
+
 ---
 
 ### Local Development & Setup
