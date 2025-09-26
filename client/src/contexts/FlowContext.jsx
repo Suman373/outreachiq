@@ -65,10 +65,10 @@ export const FlowProvider = ({ children }) => {
     const addNewNode = (nodeType, data) => {
         // free plan - 1 flow and 4 nodes (excl. lead & add)
         // lead - 10 (max)
-        if (flowData.nodes.length - 2 + userObj.usage.nodes >= userObj.quota.nodes) {
-            toast.error("Your quota limit is reached.\nUpgrade your plan to add more nodes.");
-            return;
-        }
+        // if (flowData.nodes.length - 2 + userObj.usage.nodes >= userObj.quota.nodes) {
+        //     toast.error("Your quota limit is reached.\nUpgrade your plan to add more nodes.");
+        //     return;
+        // }
         if (flowData.scheduled === true) return;
         const newNode = createNode(nodeType, 0, nodes[nodes.length - 1].position.y + 40, data);
         const updatedNodes = nodes.filter(n => n.id !== 'add-block').concat(newNode);

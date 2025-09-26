@@ -1,7 +1,6 @@
 {
   "navLinks": [
     { "text": "About", "href": "/about" },
-    { "text": "Why us", "href": "#why-us" },
     { "text": "Help", "href": "#help" },
     { "text": "Pricing", "href": "#pricing" },
     { "text": "Contact us", "href": "/contact-us" }

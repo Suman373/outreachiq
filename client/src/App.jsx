@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from "react";
+import { lazy, Suspense } from "react";
 import {
   Analytics,
   Auth,
@@ -19,42 +19,50 @@ import { useAuthContext } from "./contexts/AuthContext";
 import { ResetScroll } from "./components";
 
 const App = () => {
-  const { isLoggedIn, setIsLoggedIn, fetchAndSetUser } = useAuthContext();
-
-  useEffect(() => {
-    (async () => {
-      const userId = JSON.parse(localStorage.getItem('outreachiq-user'));
-      if (userId) {
-        await fetchAndSetUser(userId).finally(() => setIsLoggedIn(true));
-      } else {
-        setIsLoggedIn(false);
-      }
-    })();
-  }, [setIsLoggedIn]);
-
+  const { isLoggedIn, isLoading, isInitialized } = useAuthContext();
+  if (!isInitialized || isLoading) {
+    return <Preloader />;
+  }
   return (
     <BRouter>
       <Suspense fallback={<Preloader />}>
         <ResetScroll />
         <Routes>
-          <Route path="/" element={isLoggedIn ? <Home /> : <Landing />}>
-            <Route index element={<Flow />}></Route>
-            <Route path="saved-flows" element={<SavedFlows />}></Route>
-            <Route path={`flow/:id`} element={<FlowDetails />}></Route>
-            <Route path="analytics" element={<Analytics />}></Route>
-            <Route path="logs" element={<FlowLogs />}></Route>
-            <Route path="settings" element={<Settings />}></Route>
-            <Route path="profile" element={<UserProfile/>}></Route>
+          <Route 
+            path="/" 
+            element={!isLoggedIn ? <Landing /> : <Home />}
+          >
+            <Route index element={<Flow />} />
+            <Route path="saved-flows" element={<SavedFlows />} />
+            <Route path="flow/:id" element={<FlowDetails />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="logs" element={<FlowLogs />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="profile" element={<UserProfile />} />
           </Route>
-          <Route path="/register" element={!isLoggedIn ? <Auth /> : <Navigate to="/" />}></Route>
-          <Route path="/reset-password" element={!isLoggedIn ? <ResetPassword /> : <Navigate to="/" />}></Route>
-          <Route path="/verify" element={<><h1>Verify your email</h1></>}></Route>
-          <Route path="/contact-us" element={<ContactUs/>}></Route>
-          <Route path="*" element={<h1>Page not found</h1>}></Route>
+          
+          <Route 
+            path="/register" 
+            element={!isLoggedIn ? <Auth /> : <Navigate to="/" replace />} 
+          />
+          
+          <Route 
+            path="/reset-password" 
+            element={!isLoggedIn ? <ResetPassword /> : <Navigate to="/" replace />} 
+          />
+          
+          <Route 
+            path="/verify" 
+            element={<><h1>Verify your email</h1></>} 
+          />
+          
+          <Route path="/contact-us" element={<ContactUs />} />
+          
+          <Route path="*" element={<h1>Page not found</h1>} />
         </Routes>
-      </Suspense >
-    </BRouter >
-  )
-}
+      </Suspense>
+    </BRouter>
+  );
+};
 
 export default App;

@@ -27,7 +27,7 @@ const LeadSourceModal = ({ leadModalOpen, closeLeadModal, updateLeadSource }) =>
     const [activeId, setActiveId] = useState("sample-leads");
     const [showLeadsList, setShowLeadsList] = useState(false);
     const { userObj } = useAuthContext();
-    console.log(userObj.usage, userObj.quota);
+    // console.log(userObj.usage, userObj.quota);
 
     const handleCardClick = (type) => {
         switch (type) {

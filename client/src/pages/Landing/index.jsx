@@ -1,12 +1,12 @@
 import { BsArrowRight, BsPlayFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import packageJson from '../../../package.json';
-import productImg from '../../assets/product-image.png';
-import { 
-    AnimatedButton, 
-    Footer, 
-    LogoTicker, 
-    Navbar, 
+import productImg from '../../assets/dashboard.png';
+import {
+    AnimatedButton,
+    Footer,
+    LogoTicker,
+    Navbar,
     ScrollToTop
 } from "../../components";
 
@@ -42,6 +42,40 @@ const whychooseus = [
         desc: "Tailor workflows and automation to fit your needs."
     }
 ];
+
+const gettingStarted = [
+    {
+        step: 1,
+        title: "Create Account",
+        desc: "Register for the free plan and start building without requiring any CC."
+    },
+    {
+        step: 2,
+        title: "Select Leads",
+        desc: "Upload a csv in the simple format and let us handle your leads for targeting"
+    },
+    {
+        step: 3,
+        title: "Create sequence for your outreach",
+        desc: "Use nodes creatively according to your outreach campaign. leverage pre-built templates, AI, custom placeholders and more"
+    },
+    {
+        step: 4,
+        title: "Click on schedule",
+        desc: "Schedule the flow and let us handle your pipeline automation"
+    },
+    {
+        step: 5,
+        title: "View analytics",
+        desc: "Monitor the performance of your outreach sequences using our analaytics dashboard in real-time"
+    },
+    {
+        step: 6,
+        title: "View logs",
+        desc: "View the logs for the ongoing jobs in your pipeline"
+    },
+]
+
 const pricingTiers = [
     {
         title: "Free",
@@ -126,13 +160,12 @@ const Landing = () => {
                         </div>
                     </div>
                     {/* Brands */}
-                    <div className="min-h-fit text-center py-4 container">
-                        {/* <h1 className="text-xl md:text-3xl font-semibold">Brands Who Trust Us</h1> */}
+                    <div className="min-h-fit text-center py-4 container grid place-content-center">
                         <LogoTicker />
                     </div>
                     {/* Why Choose Us */}
-                    <div className="min-h-fit w-full relative flex flex-col items-center justify-start container mb-10 md:mb-20">
-                        <h1 className="text-center my-10">
+                    <div className="min-h-fit w-full relative flex flex-col items-center justify-start container">
+                        <h1 className="text-center my-10" id="why-us">
                             <span className="section-h1">Why Choose Us</span>
                         </h1>
                         <p className="sub-heading">Trusted by professionals who care about results.</p>
@@ -147,30 +180,41 @@ const Landing = () => {
                         </div>
                     </div>
                     {/* Showcase */}
-                    <div className="h-[100vh] w-full relative flex flex-col items-center justify-start container">
+                    <div className="h-[100vh] w-full relative flex flex-col items-center justify-start container pt-20">
                         <h1 className="text-center my-4 bg-white">
                             <span className="section-h1">A more effective way to automate your outreach emails</span>
                         </h1>
-                        <p className="sub-heading bg-white">
+                        <p className="sub-heading bg-white my-6">
                             Save hours of manual work with smart, personalized automation.
                         </p>
-                        <div className='flex items-center justify-center relative'>
+                        <div className='flex items-center justify-center relative my-10'>
                             <img src={productImg} alt="product-image"
-                                className='px-4 w-auto md:w-1/2' />
+                                className='px-4 w-auto md:w-2/3' />
                             <div className="bg-dots"></div>
                         </div>
-
+                        <div className="-mb-32">
+                        </div>
                     </div>
                     {/* How to use */}
-                    <div className="min-h-[600px] w-full relative flex flex-col items-center justify-start container">
-                        <h1 className="text-center my-10">
+                    <div className="min-h-[600px] w-full relative flex flex-col items-center justify-end container pt-32" id="help">
+                        <h1 className="text-center" >
                             <span className="section-h1">Getting Started</span>
                         </h1>
-                        <p className="sub-heading">Learn everything you need to launch, send, and track with ease.</p>
+                        <p className="sub-heading my-5 md:my-10">Learn everything you need to launch, send, and track with ease.</p>
+                        <div className="grid gap-9 grid-cols-1 md:grid-cols-3 mt-8 md:mt-12">
+                            {gettingStarted.map((f, idx) => (
+                                <div key={idx} className="bg-white py-3 px-6 border-l-4 border-l-brandLight transition">
+                                    <h3 className="text-base md:text-xl text-brand font-semibold mb-2">{f.step}. {f.title}</h3>
+                                    <p className="text-gray-600">{f.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="-mb-24">
+                        </div>
                     </div>
                     {/* Pricing */}
-                    <div className="min-h-fit w-full relative flex flex-col items-center justify-start container">
-                        <h1 className="text-center my-10">
+                    <div className="min-h-fit w-full relative flex flex-col items-center justify-start container pt-10 md:pt-32" id="pricing">
+                        <h1 className="text-center my-5 md:my-10">
                             <span className="section-h1">Pricing</span>
                         </h1>
                         <p className="sub-heading">Start free, scale as you grow.</p>
@@ -184,7 +228,7 @@ const Landing = () => {
                                         </div>}
                                     </div>
                                     <div className='flex items-baseline gap-1 mt-[30px]'>
-                                        <span className='text-4xl font-bold tracking-tighter leading-none'>Rs.{pricing?.monthlyPrice}</span>
+                                        <span className='text-3xl md:text-4xl font-bold tracking-tighter leading-none'>Rs.{pricing?.monthlyPrice}</span>
                                         <span className='tracking-tight font-bold text-black/50'>/month</span>
                                     </div>
                                     <ul className='flex flex-col gap-3 mt-[20px]'>
