@@ -26,7 +26,8 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
         setBlockOptSelected,
         handleBlockClick,
         emailTemplates,
-        resetBlock
+        resetBlock,
+        handleTextEnhance
     } = useBlockContext();
 
     const [customTemplate, setCustomTemplate] = useState(false);
@@ -98,6 +99,18 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
         // console.log(value,key);
         setEmailBlock(prev => ({ ...prev, variables: { ...prev.variables, [key]: value } }));
     }
+
+    function debounceCall(func, delay) {
+        let timeoutId;
+        return function (...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                func(...args)
+            }, delay);
+        }
+    }
+
+    const handleEnhanceWithAI = debounceCall(handleTextEnhance, 2000);
 
     useEffect(() => {
         const varsHandler = setTimeout(() => {
@@ -220,7 +233,9 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
 
                                                 <label className="input-label flex justify-between" htmlFor="email-subject">
                                                     Subject
-                                                    {customTemplate && <button className="flex items-center gap-2  text-amber-200">
+                                                    {customTemplate && <button
+                                                        onClick={() => handleEnhanceWithAI("subject")}
+                                                        className="flex items-center gap-2  text-amber-200">
                                                         <MdAutoAwesome className="text-lg" />
                                                         Enhance with AI
                                                     </button>}
@@ -234,7 +249,9 @@ const NewBlockModal = ({ blockModalOpen, closeBlockModal, addNewNode }) => {
 
                                                 <label className="input-label flex justify-between" htmlFor="email-body">
                                                     Body
-                                                    {customTemplate && <button className="flex items-center gap-2  text-amber-200">
+                                                    {customTemplate && <button
+                                                        onClick={() => handleEnhanceWithAI("body")}
+                                                        className="flex items-center gap-2  text-amber-200">
                                                         <MdAutoAwesome className="text-lg" />
                                                         Enhance with AI
                                                     </button>}

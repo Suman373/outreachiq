@@ -3,9 +3,9 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 import toast from "react-hot-toast";
-import { billingDates, validatePassword } from "../../utils";
-import moment from 'moment';
+import { billingDateFields, calculateBillingDates, validatePassword } from "../../utils";
 import { updateUserProfileImg } from "../../api/user";
+
 
 const UserProfile = () => {
     const navigate = useNavigate();
@@ -24,20 +24,15 @@ const UserProfile = () => {
     const [changePwdClicked, setChangePwdClicked] = useState(false);
     const [isDirty, setIsDirty] = useState(false);
 
-    const currDate = new Date();
-    const dummyDates = {
-        startDate: moment(currDate).format("ll"),
-        endDate: moment(new Date(currDate).setDate(currDate.getDate() + 30)).format('ll'),
-        billingAmount: `INR ${0}`,
-    }
+    const billingInfo = calculateBillingDates(userObj.renewalDate);
 
     const renderBillingDate = () => {
         return (
             <div className="flex items-center justify-between">
                 <div className="flex gap-20">
-                    {Object.entries(dummyDates)?.map(([k, v]) => (
+                    {Object.entries(billingInfo)?.map(([k, v]) => (
                         <div className="block">
-                            <p className="text-black font-medium">{billingDates[k]}</p>
+                            <p className="text-black font-medium">{billingDateFields[k]}</p>
                             <p>{v.toString()}</p>
                         </div>
                     ))}
@@ -312,11 +307,11 @@ const UserProfile = () => {
                     </div>
                     <div className="mb-1 text-base font-medium   flex items-center justify-between">
                         <span>AI assists</span>
-                        <span>{userObj.usage.aiAssists} of {userObj.quota.aiAssists} used ( {userObj.quota.aiAssists - userObj.usage.aiAssists} remaining )</span>
+                        <span>{userObj.usage.aiTokens} of {userObj.quota.aiTokens} used ( {userObj.quota.aiTokens - userObj.usage.aiTokens} remaining )</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-3">
                         <div className="bg-brand/70 h-2.5 rounded-full"
-                            style={{ width: `${(userObj.quota.aiAssists - userObj.usage.aiAssists) / (userObj.quota.aiAssists) * 100}%` }}></div>
+                            style={{ width: `${(userObj.quota.aiTokens - userObj.usage.aiTokens) / (userObj.quota.aiTokens) * 100}%` }}></div>
                     </div>
 
                 </div>

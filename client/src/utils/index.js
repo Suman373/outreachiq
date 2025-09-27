@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import moment from 'moment';
 
 const timeUnitsInSeconds = Object.freeze({
     "Minutes": 60,        // 1 minute = 60 seconds
@@ -15,7 +16,7 @@ export const flowStatus = Object.freeze({
     "partial": "Partial"
 });
 
-export const billingDates = Object.freeze({
+export const billingDateFields = Object.freeze({
     startDate: "Start Date",
     endDate: "End Date",
     billingAmount: "Billing Amount"
@@ -66,7 +67,7 @@ export const convertToSeconds = (val, unit) => {
 export const extractVariablesMap = (textList) => {
     // {{ }} match
     const allMatches = textList.flatMap(text =>
-        text.match(/{{\s*[\w.]+\s*}}/g) || []
+        text?.match(/{{\s*[\w.]+\s*}}/g) || []
     );
 
     const cleanKeys = [...new Set(allMatches.map(v =>
@@ -133,4 +134,14 @@ export const getUserYears = (createdAt) => {
         (_, i) => firstYear + i);
     if (!userYears) return [];
     return userYears;
+}
+
+export const calculateBillingDates = (renewalDate) => {
+    const endDateMoment =  moment(renewalDate);
+    const startDateMoment = endDateMoment?.clone().subtract(30, 'days');
+    return {
+        startDate: startDateMoment.format("ll"),
+        endDate: endDateMoment.format("ll"),
+        billingAmount: `INR 0`,
+    };
 }
