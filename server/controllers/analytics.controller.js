@@ -32,7 +32,7 @@ const getSummary = async (req, res) => {
         res.status(200).json({ message: "Fetched summary successfully", result: response.summary });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "Something went wrong" });
     }
 }
 
@@ -67,7 +67,7 @@ const getQuickStats = async (req, res) => {
         res.status(200).json({ message: "Fetched quick stats successfully", result: response.quickStats });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "Something went wrong" });
     }
 }
 
@@ -76,16 +76,3 @@ module.exports = {
     getSummary,
     getQuickStats
 }
-
-
-/*
-
-const boiler = async (req, res) => {
-    try {
-
-    } catch (error) {
-
-    }
-}
-
-*/

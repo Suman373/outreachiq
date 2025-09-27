@@ -6,4 +6,5 @@ module.exports = {
     ANALYTICS_SERVICE: require('./analytics.service'),
     SETTINGS_SERVICE: require('./settings.service'),
     USER_SERVICE: require('./user.service'),
+    AI_SERVICE: require('./ai.service')
 }

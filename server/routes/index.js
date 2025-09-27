@@ -4,4 +4,5 @@ module.exports = {
     UserRoute: require('./user.route'),
     AnalyticsRoute: require('./analytics.route'),
     SettingsRoute: require('./settings.route'),
+    AIRoute: require('./ai.route'),
 }

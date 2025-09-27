@@ -6,9 +6,10 @@ const {
     AuthRoute,
     UserRoute, 
     AnalyticsRoute, 
-    SettingsRoute
+    SettingsRoute,
+    AIRoute
 } = require('./routes/index');
-const { verifyAuthRequest } = require('./middleware/auth');
+
 
 module.exports = async(app)=>{
     app.use(cors({origin:"*"}));
@@ -25,4 +26,5 @@ module.exports = async(app)=>{
     app.use('/api/v1/flows', FlowRoute);
     app.use('/api/v1/analytics', AnalyticsRoute);
     app.use('/api/v1/settings', SettingsRoute);
+    app.use('/api/v1/ai', AIRoute);
 }
